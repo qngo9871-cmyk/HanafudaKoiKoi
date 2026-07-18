@@ -4,6 +4,9 @@ struct ContentView: View {
     var body: some View {
         #if DEBUG
         if let capture = ProcessInfo.processInfo.environment["HK_CAPTURE"], capture != "home" {
+            if capture == "upgrade" {
+                return AnyView(UpgradeView().preferredColorScheme(.dark))
+            }
             let game = GameModel()
             game.captureSetup(capture)
             return AnyView(NavigationStack { GameView(game: game) }.preferredColorScheme(.dark))
