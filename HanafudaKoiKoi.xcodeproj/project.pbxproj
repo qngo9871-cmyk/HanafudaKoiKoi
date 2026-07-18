@@ -1,0 +1,387 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		02E05691526DE1286BC992BC /* AIPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C91C14A4420EC32F680DB28 /* AIPlayer.swift */; };
+		0A8E6D6CA6B597FE44BDF652 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF5BCF9D26A457C324982C1A /* HomeView.swift */; };
+		0B42C5952BFACBBB2D100CED /* HanafudaCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = E83930DF6DB381C71978BCC8 /* HanafudaCard.swift */; };
+		1143C9DFE7AB87BE5F60B77D /* CardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3311C0ACC0F2609CF34F836C /* CardView.swift */; };
+		1B47FCCC417AF3AE820CF122 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 12427F9CA8BFBD51AEC287C4 /* PrivacyInfo.xcprivacy */; };
+		254B37A71602786FAE6716DD /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31BAD72731E7D9429A5F4DB5 /* ContentView.swift */; };
+		7EA8EEFAA769580C8F9D10E7 /* HanafudaKoiKoiApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCDA318F88E1D0A99D2F2C6F /* HanafudaKoiKoiApp.swift */; };
+		B06A4DE1A950A0DA2A88DC91 /* GameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF82EC6560969AF45DD96F8B /* GameView.swift */; };
+		B396A4F432D2C8D805E64AB8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E2691F2C45CCA51AB65936CA /* Assets.xcassets */; };
+		BFC44341BC32C9F14340198E /* PurchaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C80B89C988348A97B7C92679 /* PurchaseManager.swift */; };
+		C85EE6BD2C3F4D68E9945433 /* GameModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BA9091598952AEDCA962ADC /* GameModel.swift */; };
+		CE1AC5F61CC620DA91FFE7C4 /* UpgradeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6395C34FED68BFD25E8C3B13 /* UpgradeView.swift */; };
+		E2790AAA5370E46084458B80 /* YakuScorer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77305BAB37BBC95876E15ACC /* YakuScorer.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		12427F9CA8BFBD51AEC287C4 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+		31BAD72731E7D9429A5F4DB5 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		3311C0ACC0F2609CF34F836C /* CardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardView.swift; sourceTree = "<group>"; };
+		481990F3D1A5A7C63A40D479 /* HanafudaKoiKoi.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = HanafudaKoiKoi.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		5C91C14A4420EC32F680DB28 /* AIPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AIPlayer.swift; sourceTree = "<group>"; };
+		6395C34FED68BFD25E8C3B13 /* UpgradeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpgradeView.swift; sourceTree = "<group>"; };
+		77305BAB37BBC95876E15ACC /* YakuScorer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YakuScorer.swift; sourceTree = "<group>"; };
+		8BA9091598952AEDCA962ADC /* GameModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameModel.swift; sourceTree = "<group>"; };
+		BF82EC6560969AF45DD96F8B /* GameView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameView.swift; sourceTree = "<group>"; };
+		C80B89C988348A97B7C92679 /* PurchaseManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PurchaseManager.swift; sourceTree = "<group>"; };
+		CCDA318F88E1D0A99D2F2C6F /* HanafudaKoiKoiApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HanafudaKoiKoiApp.swift; sourceTree = "<group>"; };
+		DF5BCF9D26A457C324982C1A /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
+		E2691F2C45CCA51AB65936CA /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		E83930DF6DB381C71978BCC8 /* HanafudaCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HanafudaCard.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXGroup section */
+		2576FBC116F1BE63759D8C1D /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				481990F3D1A5A7C63A40D479 /* HanafudaKoiKoi.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		4D29275EBD938A5B8E0502EF /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				3311C0ACC0F2609CF34F836C /* CardView.swift */,
+				BF82EC6560969AF45DD96F8B /* GameView.swift */,
+				DF5BCF9D26A457C324982C1A /* HomeView.swift */,
+				6395C34FED68BFD25E8C3B13 /* UpgradeView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		5457D34631C718F9EC12E409 = {
+			isa = PBXGroup;
+			children = (
+				CCE3CB1137DAE13C788B73C5 /* HanafudaKoiKoi */,
+				2576FBC116F1BE63759D8C1D /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		7C96F4DA78EB82B6EA73CAF9 /* Core */ = {
+			isa = PBXGroup;
+			children = (
+				5C91C14A4420EC32F680DB28 /* AIPlayer.swift */,
+				8BA9091598952AEDCA962ADC /* GameModel.swift */,
+				E83930DF6DB381C71978BCC8 /* HanafudaCard.swift */,
+				C80B89C988348A97B7C92679 /* PurchaseManager.swift */,
+				77305BAB37BBC95876E15ACC /* YakuScorer.swift */,
+			);
+			path = Core;
+			sourceTree = "<group>";
+		};
+		CCE3CB1137DAE13C788B73C5 /* HanafudaKoiKoi */ = {
+			isa = PBXGroup;
+			children = (
+				E2691F2C45CCA51AB65936CA /* Assets.xcassets */,
+				31BAD72731E7D9429A5F4DB5 /* ContentView.swift */,
+				CCDA318F88E1D0A99D2F2C6F /* HanafudaKoiKoiApp.swift */,
+				12427F9CA8BFBD51AEC287C4 /* PrivacyInfo.xcprivacy */,
+				7C96F4DA78EB82B6EA73CAF9 /* Core */,
+				4D29275EBD938A5B8E0502EF /* Views */,
+			);
+			path = HanafudaKoiKoi;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		3E9876D5BC5DB8F681300C8F /* HanafudaKoiKoi */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 05C28E69BBC4B80FF6B0A21A /* Build configuration list for PBXNativeTarget "HanafudaKoiKoi" */;
+			buildPhases = (
+				6029DB2048431CEEE73225FE /* Sources */,
+				1004E41B133B231873B4F9A7 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = HanafudaKoiKoi;
+			packageProductDependencies = (
+			);
+			productName = HanafudaKoiKoi;
+			productReference = 481990F3D1A5A7C63A40D479 /* HanafudaKoiKoi.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		A02A97CD984EDDED1D8C92A7 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1430;
+				TargetAttributes = {
+					3E9876D5BC5DB8F681300C8F = {
+						DevelopmentTeam = SM99L22Q84;
+						ProvisioningStyle = Automatic;
+					};
+				};
+			};
+			buildConfigurationList = 51B1F6F9081539525FB6CFE9 /* Build configuration list for PBXProject "HanafudaKoiKoi" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = 5457D34631C718F9EC12E409;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 2576FBC116F1BE63759D8C1D /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				3E9876D5BC5DB8F681300C8F /* HanafudaKoiKoi */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		1004E41B133B231873B4F9A7 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B396A4F432D2C8D805E64AB8 /* Assets.xcassets in Resources */,
+				1B47FCCC417AF3AE820CF122 /* PrivacyInfo.xcprivacy in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		6029DB2048431CEEE73225FE /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				02E05691526DE1286BC992BC /* AIPlayer.swift in Sources */,
+				1143C9DFE7AB87BE5F60B77D /* CardView.swift in Sources */,
+				254B37A71602786FAE6716DD /* ContentView.swift in Sources */,
+				C85EE6BD2C3F4D68E9945433 /* GameModel.swift in Sources */,
+				B06A4DE1A950A0DA2A88DC91 /* GameView.swift in Sources */,
+				0B42C5952BFACBBB2D100CED /* HanafudaCard.swift in Sources */,
+				7EA8EEFAA769580C8F9D10E7 /* HanafudaKoiKoiApp.swift in Sources */,
+				0A8E6D6CA6B597FE44BDF652 /* HomeView.swift in Sources */,
+				BFC44341BC32C9F14340198E /* PurchaseManager.swift in Sources */,
+				CE1AC5F61CC620DA91FFE7C4 /* UpgradeView.swift in Sources */,
+				E2790AAA5370E46084458B80 /* YakuScorer.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		07333AAFD5F096699B9B91D8 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_STYLE = Automatic;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = SM99L22Q84;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_PREVIEWS = YES;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				MARKETING_VERSION = 1.0.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
+		10DE0088F2453559AF8FE25E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_STYLE = Automatic;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = SM99L22Q84;
+				ENABLE_PREVIEWS = YES;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				MARKETING_VERSION = 1.0.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+		80A0F2FC98C7C53720E7AE09 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Koi-Koi Hanafuda";
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.quyenngo.hanafudakoikoi;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
+		81906F66D524C3699E9B40CD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Koi-Koi Hanafuda";
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.quyenngo.hanafudakoikoi;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		05C28E69BBC4B80FF6B0A21A /* Build configuration list for PBXNativeTarget "HanafudaKoiKoi" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				81906F66D524C3699E9B40CD /* Debug */,
+				80A0F2FC98C7C53720E7AE09 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		51B1F6F9081539525FB6CFE9 /* Build configuration list for PBXProject "HanafudaKoiKoi" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				10DE0088F2453559AF8FE25E /* Debug */,
+				07333AAFD5F096699B9B91D8 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = A02A97CD984EDDED1D8C92A7 /* Project object */;
+}

@@ -1,0 +1,36 @@
+{
+  "identifier" : "8B4F3C2E-5D6C-7E8F-9A0B-1C2D3E4F5A6B",
+  "type" : "com.apple.storekit-configuration",
+  "version" : 3,
+  "products" : [
+    {
+      "displayPrice" : "2.99",
+      "familyShareable" : false,
+      "internalID" : "E2F3A4B5-C6D7-8E9F-0A1B-2C3D4E5F6A7B",
+      "localizations" : [
+        {
+          "description" : "Unlock Hard AI, local two-player, and card back designs",
+          "displayName" : "Koi-Koi Pro",
+          "locale" : "en_US"
+        }
+      ],
+      "productID" : "com.quyenngo.hanafudakoikoi.pro",
+      "referenceName" : "Koi-Koi Pro Unlock",
+      "type" : "NonConsumable"
+    }
+  ],
+  "settings" : {
+    "_applicationInternalID" : "",
+    "_developerTeamID" : "SM99L22Q84",
+    "_failTransactionsEnabled" : false,
+    "_locale" : "en_US",
+    "_storefront" : "USA",
+    "_storeKitErrors" : [
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Load Products"
+      }
+    ]
+  }
+}
