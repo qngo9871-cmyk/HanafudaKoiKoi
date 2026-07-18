@@ -46,9 +46,12 @@ def build_app():
     return app
 
 
-def font(size):
-    for c in ["/System/Library/Fonts/SFNSDisplay.ttf", "/System/Library/Fonts/SFNS.ttf",
-              "/System/Library/Fonts/Supplemental/Arial Bold.ttf"]:
+DEFAULT_FONT_PATHS = ["/System/Library/Fonts/SFNSDisplay.ttf", "/System/Library/Fonts/SFNS.ttf",
+                      "/System/Library/Fonts/Supplemental/Arial Bold.ttf"]
+
+
+def font(size, paths=None):
+    for c in (paths or DEFAULT_FONT_PATHS):
         if Path(c).exists():
             try: return ImageFont.truetype(c, size)
             except Exception: continue
@@ -58,7 +61,7 @@ def font(size):
 def lerp(a, b, t): return tuple(int(a[i] + (b[i] - a[i]) * t) for i in range(3))
 
 
-def compose(raw_png, headline, out_png):
+def compose(raw_png, headline, out_png, font_paths=None):
     shot = Image.open(raw_png).convert("RGB").resize((W, H), Image.LANCZOS)
     canvas = Image.new("RGB", (W, H))
     d = ImageDraw.Draw(canvas)
@@ -68,10 +71,10 @@ def compose(raw_png, headline, out_png):
     lines = headline.split("\n")
     size = 100
     max_w = W * 0.9
-    f = font(size)
+    f = font(size, font_paths)
     while size > 56 and max(d.textlength(line, font=f) for line in lines) > max_w:
         size -= 4
-        f = font(size)
+        f = font(size, font_paths)
     lh = int(size * 1.18)
     y = (BAND - lh * len(lines)) // 2 + 8
     for line in lines:
