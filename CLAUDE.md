@@ -86,19 +86,19 @@ known as Go-Stop in Korea with a Hwatu deck). Play vs AI at three difficulty lev
   `PATCH appStoreVersions/{id}/relationships/build` (confirmed: `APP_STORE_ELIGIBLE`,
   custom crane+sun icon rendering correctly server-side).
 
-  **🔴 GENUINELY remaining (confirmed API-inaccessible, both need Q in the ASC UI):**
-  1. App Privacy nutrition-label questionnaire — no API exists for this at all (tried
-     `appDataUsages`/`dataUsagePlans`, both 404). Answer "no data collected" (fully
-     offline, no analytics, no third-party SDKs).
-  2. Tick the IAP into the version's own submission page (NOT the API, NOT the IAP's
-     own page) before Submit for Review — first-ever IAP/sub on an app MUST go through
-     the UI (`inAppPurchaseSubmissions` POST is gated until one IAP has been through
-     review once, per CLAUDE.md). **Do not create a reviewSubmission via API before this
-     step** — it would submit without the IAP attached and guarantee the Guideline
-     2.1(b) rejection documented in [[project_fence_ai]].
-  3. After both of those: Submit for Review (either Q clicks it, or ask Claude Code to
-     do the `POST /v1/reviewSubmissions` → `reviewSubmissionItems` → `submitted=true`
-     API flow once the IAP is confirmed ticked in).
+  **🟢 SUBMITTED 2026-07-18, same session.** Q hit the exact documented trap once
+  (clicked "Add for Review" from the IAP's own individual page first, which created an
+  orphaned version-less draft — "Unable to Submit for Review: add an app version").
+  Fixed by going to the version's own page instead and ticking the IAP there (the only
+  UI path that bundles them into one submission — see the Fence AI 2.1(b) lesson).
+  Confirmed via API: `reviewSubmissions` state `WAITING_FOR_REVIEW`, platform `IOS`,
+  version 1.0.0 `appStoreState`/`appVersionState` both `WAITING_FOR_REVIEW`. App Privacy
+  nutrition labels must have been filled by Q in the web UI too (no API exists for that
+  field, and Apple won't allow submission without it) — not independently verified via
+  API since there's no endpoint to check, but the successful submission implies it's done.
+
+  Next check-in: watch for Apple's review outcome (approval or rejection) — typically
+  24-48h. If rejected, check `GET /v1/apps/6792249228/reviewSubmissions` for the reason.
 
 ## Instructions for Claude Code
 At the end of every session, update the Current State section to reflect progress made.
