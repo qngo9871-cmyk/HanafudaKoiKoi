@@ -14,11 +14,13 @@
 		1B47FCCC417AF3AE820CF122 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 12427F9CA8BFBD51AEC287C4 /* PrivacyInfo.xcprivacy */; };
 		254B37A71602786FAE6716DD /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31BAD72731E7D9429A5F4DB5 /* ContentView.swift */; };
 		7EA8EEFAA769580C8F9D10E7 /* HanafudaKoiKoiApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCDA318F88E1D0A99D2F2C6F /* HanafudaKoiKoiApp.swift */; };
+		AA836BF9DC9866380CD4B41C /* Products.storekit in Resources */ = {isa = PBXBuildFile; fileRef = 5D9FDBDE2BFCC864ABC5B45E /* Products.storekit */; };
 		B06A4DE1A950A0DA2A88DC91 /* GameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF82EC6560969AF45DD96F8B /* GameView.swift */; };
 		B396A4F432D2C8D805E64AB8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E2691F2C45CCA51AB65936CA /* Assets.xcassets */; };
 		BFC44341BC32C9F14340198E /* PurchaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C80B89C988348A97B7C92679 /* PurchaseManager.swift */; };
 		C85EE6BD2C3F4D68E9945433 /* GameModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BA9091598952AEDCA962ADC /* GameModel.swift */; };
 		CE1AC5F61CC620DA91FFE7C4 /* UpgradeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6395C34FED68BFD25E8C3B13 /* UpgradeView.swift */; };
+		D4CC512F01018A968ECB5A8F /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6D3D27638FD47BA5224D378 /* OnboardingView.swift */; };
 		E2790AAA5370E46084458B80 /* YakuScorer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77305BAB37BBC95876E15ACC /* YakuScorer.swift */; };
 /* End PBXBuildFile section */
 
@@ -28,9 +30,11 @@
 		3311C0ACC0F2609CF34F836C /* CardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardView.swift; sourceTree = "<group>"; };
 		481990F3D1A5A7C63A40D479 /* HanafudaKoiKoi.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = HanafudaKoiKoi.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5C91C14A4420EC32F680DB28 /* AIPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AIPlayer.swift; sourceTree = "<group>"; };
+		5D9FDBDE2BFCC864ABC5B45E /* Products.storekit */ = {isa = PBXFileReference; path = Products.storekit; sourceTree = "<group>"; };
 		6395C34FED68BFD25E8C3B13 /* UpgradeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpgradeView.swift; sourceTree = "<group>"; };
 		77305BAB37BBC95876E15ACC /* YakuScorer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YakuScorer.swift; sourceTree = "<group>"; };
 		8BA9091598952AEDCA962ADC /* GameModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameModel.swift; sourceTree = "<group>"; };
+		A6D3D27638FD47BA5224D378 /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
 		BF82EC6560969AF45DD96F8B /* GameView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameView.swift; sourceTree = "<group>"; };
 		C80B89C988348A97B7C92679 /* PurchaseManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PurchaseManager.swift; sourceTree = "<group>"; };
 		CCDA318F88E1D0A99D2F2C6F /* HanafudaKoiKoiApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HanafudaKoiKoiApp.swift; sourceTree = "<group>"; };
@@ -54,6 +58,7 @@
 				3311C0ACC0F2609CF34F836C /* CardView.swift */,
 				BF82EC6560969AF45DD96F8B /* GameView.swift */,
 				DF5BCF9D26A457C324982C1A /* HomeView.swift */,
+				A6D3D27638FD47BA5224D378 /* OnboardingView.swift */,
 				6395C34FED68BFD25E8C3B13 /* UpgradeView.swift */,
 			);
 			path = Views;
@@ -86,6 +91,7 @@
 				31BAD72731E7D9429A5F4DB5 /* ContentView.swift */,
 				CCDA318F88E1D0A99D2F2C6F /* HanafudaKoiKoiApp.swift */,
 				12427F9CA8BFBD51AEC287C4 /* PrivacyInfo.xcprivacy */,
+				5D9FDBDE2BFCC864ABC5B45E /* Products.storekit */,
 				7C96F4DA78EB82B6EA73CAF9 /* Core */,
 				4D29275EBD938A5B8E0502EF /* Views */,
 			);
@@ -154,6 +160,7 @@
 			files = (
 				B396A4F432D2C8D805E64AB8 /* Assets.xcassets in Resources */,
 				1B47FCCC417AF3AE820CF122 /* PrivacyInfo.xcprivacy in Resources */,
+				AA836BF9DC9866380CD4B41C /* Products.storekit in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -172,6 +179,7 @@
 				0B42C5952BFACBBB2D100CED /* HanafudaCard.swift in Sources */,
 				7EA8EEFAA769580C8F9D10E7 /* HanafudaKoiKoiApp.swift in Sources */,
 				0A8E6D6CA6B597FE44BDF652 /* HomeView.swift in Sources */,
+				D4CC512F01018A968ECB5A8F /* OnboardingView.swift in Sources */,
 				BFC44341BC32C9F14340198E /* PurchaseManager.swift in Sources */,
 				CE1AC5F61CC620DA91FFE7C4 /* UpgradeView.swift in Sources */,
 				E2790AAA5370E46084458B80 /* YakuScorer.swift in Sources */,
@@ -216,7 +224,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = SM99L22Q84;
 				ENABLE_NS_ASSERTIONS = NO;
@@ -279,7 +287,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = SM99L22Q84;
 				ENABLE_PREVIEWS = YES;
@@ -319,7 +327,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Koi-Koi Hanafuda";
@@ -342,7 +350,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Koi-Koi Hanafuda";

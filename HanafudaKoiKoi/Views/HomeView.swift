@@ -5,6 +5,7 @@ struct HomeView: View {
     @StateObject private var purchases = PurchaseManager.shared
     @State private var showGame = false
     @State private var showUpgrade = false
+    @State private var showHowToPlay = false
     @State private var pendingDifficulty: AIDifficulty = .normal
 
     var body: some View {
@@ -72,6 +73,12 @@ struct HomeView: View {
                     }
                     .padding(.horizontal, 28)
 
+                    Button { showHowToPlay = true } label: {
+                        Text("How to Play")
+                            .font(.system(size: 14, weight: .semibold))
+                            .foregroundStyle(.white.opacity(0.85))
+                    }
+
                     Spacer()
 
                     if !purchases.isPro {
@@ -89,6 +96,9 @@ struct HomeView: View {
             }
             .sheet(isPresented: $showUpgrade) {
                 UpgradeView()
+            }
+            .sheet(isPresented: $showHowToPlay) {
+                OnboardingView(onFinished: { showHowToPlay = false })
             }
             .task { await purchases.loadProduct() }
         }
