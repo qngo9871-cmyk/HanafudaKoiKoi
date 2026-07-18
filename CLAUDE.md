@@ -39,17 +39,27 @@ known as Go-Stop in Korea with a Hwatu deck). Play vs AI at three difficulty lev
   crane+sun icon, 4 real in-app screenshots captured via DEBUG hook, privacy/support
   pages, ASO metadata drafted (see `docs/asc-metadata.md`). Builds clean for simulator
   and device (both verified this session). Bundle ID `com.quyenngo.hanafudakoikoi`
-  registered via API (`~/asc-tools/asc_register_hanafudakoikoi.py`, id=5LJ79JPT7J).
+  registered via API (`~/asc-tools/asc_register_hanafudakoikoi.py`, id=5LJ79JPT7J). Q
+  manually created the ASC app listing (id=6792249228) after `POST /v1/apps` 403'd as
+  expected. Repo pushed to `github.com/qngo9871-cmyk/HanafudaKoiKoi`, GitHub Pages live
+  at `qngo9871-cmyk.github.io/HanafudaKoiKoi/` serving `docs/privacy-policy.html` +
+  `docs/support.html`. **2026-07-18 same session: full ASC metadata pushed for BOTH
+  en-US and ja** via `~/asc-tools/asc_push_hanafudakoikoi.py` — categories
+  (GAMES/GAMES_CARD/GAMES_BOARD), app name+subtitle+privacy URL per locale, version
+  1.0.0 keywords/description/promo/support URL per locale, and the
+  `com.quyenngo.hanafudakoikoi.pro` non-consumable IAP with en-US + ja localizations.
+  Japanese copy hand-written for JP ASO (title "花札 こいこい - 定番カードゲーム",
+  subtitle "AIと対戦できる本格こいこい"), not machine-translated from the English —
+  per [[feedback_aso_seo_default]]. Screenshots still English-only (ja falls back to
+  en-US set until localized — acceptable per [[project_appstore_localization_expansion]]).
+
   NOT YET submitted to App Store Connect — remaining steps needing Q or a further
-  session: (1) **manual ASC app-listing creation** — `POST /v1/apps` 403'd as expected
-  (Apple blocks programmatic app creation), Q needs to click "+ New App" in ASC UI with
-  name "Hanafuda Koi-Koi Go-Stop", bundle `com.quyenngo.hanafudakoikoi`, SKU
-  `hanafudakoikoi-2026`; (2) create the `com.quyenngo.hanafudakoikoi.pro` IAP via
-  `POST /v2/inAppPurchases` once the app exists; (3) push metadata/screenshots from
-  `docs/asc-metadata.md` + `screenshots/final/`; (4) App Privacy questionnaire (web UI
-  only) — answer "no data collected"; (5) archive + upload via
-  `xcrun altool --upload-app`; (6) tick the IAP into the version's submission page
-  (not the API) before Submit for Review, per [[feedback_ios_submission_checklist]].
+  session: (1) IAP price tier in ASC UI ($2.99) + app base price Tier 0 (Free) — pricing
+  API is fiddly, do this in the UI per CLAUDE.md; (2) App Privacy questionnaire (web UI
+  only) — answer "no data collected"; (3) age rating questionnaire (4+, no gambling);
+  (4) archive + upload via `xcrun altool --upload-app`; (5) tick the IAP into the
+  version's own submission page (NOT the API, NOT the IAP's own page) before Submit for
+  Review, per [[feedback_ios_submission_checklist]] and the Fence AI 2.1(b) lesson.
 
 ## Instructions for Claude Code
 At the end of every session, update the Current State section to reflect progress made.
