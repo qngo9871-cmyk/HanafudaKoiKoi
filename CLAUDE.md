@@ -76,22 +76,29 @@ known as Go-Stop in Korea with a Hwatu deck). Play vs AI at three difficulty lev
   price points are `GET /v2/inAppPurchases/{id}/pricePoints`; but the price *schedule*
   POST for an IAP is `POST /v1/inAppPurchasePriceSchedules` (v1 base, NOT v2 — v2 404s).
 
-  **Build:** archived + exported + uploaded same session. `-exportArchive` initially
-  failed ("No Accounts" / no App Store profile exists yet for a brand-new bundle ID) —
-  fixed by adding `-authenticationKeyPath/-authenticationKeyID/-authenticationKeyIssuerID`
-  flags pointing at the ASC API key, which let Xcode auto-create the missing
-  distribution profile. Uploaded via `xcrun altool --upload-app`. Build 1 was
-  PROCESSING as of end of session — check state before attaching to the version.
+  **Build:** archived + exported + uploaded + attached to version 1.0.0, all same
+  session. `-exportArchive` initially failed ("No Accounts" / no App Store profile
+  exists yet for a brand-new bundle ID) — fixed by adding
+  `-authenticationKeyPath/-authenticationKeyID/-authenticationKeyIssuerID` flags
+  pointing at the ASC API key, which let Xcode auto-create the missing distribution
+  profile. Uploaded via `xcrun altool --upload-app`. Build 1 went PROCESSING → VALID in
+  under a minute, then attached to the version via
+  `PATCH appStoreVersions/{id}/relationships/build` (confirmed: `APP_STORE_ELIGIBLE`,
+  custom crane+sun icon rendering correctly server-side).
 
-  **🔴 GENUINELY remaining (confirmed API-inaccessible):**
+  **🔴 GENUINELY remaining (confirmed API-inaccessible, both need Q in the ASC UI):**
   1. App Privacy nutrition-label questionnaire — no API exists for this at all (tried
-     `appDataUsages`/`dataUsagePlans`, both 404). Web UI only.
-  2. Once build 1 shows `VALID` (not `PROCESSING`/`INVALID`), attach it to the version.
-  3. Tick the IAP into the version's own submission page (NOT the API, NOT the IAP's
+     `appDataUsages`/`dataUsagePlans`, both 404). Answer "no data collected" (fully
+     offline, no analytics, no third-party SDKs).
+  2. Tick the IAP into the version's own submission page (NOT the API, NOT the IAP's
      own page) before Submit for Review — first-ever IAP/sub on an app MUST go through
-     the UI per CLAUDE.md (`inAppPurchaseSubmissions` POST is gated until one IAP has
-     been through review once).
-  4. Submit for Review.
+     the UI (`inAppPurchaseSubmissions` POST is gated until one IAP has been through
+     review once, per CLAUDE.md). **Do not create a reviewSubmission via API before this
+     step** — it would submit without the IAP attached and guarantee the Guideline
+     2.1(b) rejection documented in [[project_fence_ai]].
+  3. After both of those: Submit for Review (either Q clicks it, or ask Claude Code to
+     do the `POST /v1/reviewSubmissions` → `reviewSubmissionItems` → `submitted=true`
+     API flow once the IAP is confirmed ticked in).
 
 ## Instructions for Claude Code
 At the end of every session, update the Current State section to reflect progress made.
