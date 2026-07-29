@@ -97,8 +97,41 @@ known as Go-Stop in Korea with a Hwatu deck). Play vs AI at three difficulty lev
   field, and Apple won't allow submission without it) — not independently verified via
   API since there's no endpoint to check, but the successful submission implies it's done.
 
-  Next check-in: watch for Apple's review outcome (approval or rejection) — typically
-  24-48h. If rejected, check `GET /v1/apps/6792249228/reviewSubmissions` for the reason.
+  **🔴 REJECTED 2026-07-19** (build 2, submission `0b41f5f1`): Guideline 4.0 Design —
+  "not optimized to support all screen sizes or resolutions," specifically iPad. App is
+  `TARGETED_DEVICE_FAMILY: "1"` (iPhone-only) but iPad still runs iPhone-only apps in a
+  compatibility window (Apple does not let you opt out of this), and Apple's reviewer
+  tests it there. Root cause: `GameView`'s board (score header, opponent hand, 2 captured
+  rows, 2-row field grid, message, player hand — all fixed sizes off a 58×81pt card) adds
+  up to ~820pt of content, more than fits in the compat window's short viewport, so the
+  bottom of the board (player hand / "your move" prompt) got clipped.
+
+  **🟢 FIXED + RESUBMITTED 2026-07-29, same session.** `GameView` now wraps its body in a
+  `GeometryReader` and derives `cardWidth`/`cardHeight`/gap sizes from a `scale` factor
+  (`min(1.0, max(0.6, availableHeight / 820))`), threaded down into `fieldGrid`,
+  `capturedRow`, and `capturePicker` as params instead of stored `let`s. Verified by
+  installing the built app on an **iPad mini (A17 Pro) simulator** (real repro of Apple's
+  compatibility-window path, launched via `SIMCTL_CHILD_HK_CAPTURE=table xcrun simctl
+  launch` to jump straight to the table screen) — board now fits with room to spare, no
+  clipping.
+
+  Build 3 uploaded same as build 1's flow (`-authenticationKeyPath/-ID/-IssuerID` +
+  `xcrun altool --upload-app`), `CURRENT_PROJECT_VERSION` bumped 2→3 in `project.yml`
+  (check `GET /v1/apps/6792249228/builds` for the next unused version number before any
+  future upload — duplicate build numbers are rejected). Resubmitted via the API using
+  the cancel-old→attach-build→create-submission→attach-version→submit flow in memory
+  `[[asc-resubmit-after-rejection]]` (old submission `0b41f5f1` canceled, new submission
+  `5f16739f` created, build 3 attached to version, submitted — now `WAITING_FOR_REVIEW`).
+
+  Migration note: this session was the first Mac-mini run of this project — `xcodegen`
+  wasn't installed (`brew install xcodegen`) and `xcode-select` still pointed at
+  CommandLineTools instead of `/Applications/Xcode.app` (needed `sudo xcode-select -s`,
+  which required the user to run it from a real Terminal.app window since Claude Code's
+  `!` prefix doesn't give sudo a real TTY for the password prompt).
+
+  Next check-in: watch for Apple's review outcome on submission `5f16739f` (build 3) —
+  typically 24-48h. If rejected again, check
+  `GET /v1/apps/6792249228/reviewSubmissions` for the reason.
 
 ## Instructions for Claude Code
 At the end of every session, update the Current State section to reflect progress made.

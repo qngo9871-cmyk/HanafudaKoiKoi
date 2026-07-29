@@ -4,82 +4,97 @@ struct GameView: View {
     @ObservedObject var game: GameModel
     @Environment(\.dismiss) private var dismiss
 
-    private let cardWidth: CGFloat = 58
-    private let cardHeight: CGFloat = 81
+    // Design height the fixed-size board elements below were sized for (full-height iPhone).
+    // On shorter viewports — iPhone SE, or an iPad running this iPhone-only app in its
+    // compatibility window — everything is scaled down so the board always fits without
+    // clipping or overlapping (this is what triggered the App Store Guideline 4 rejection).
+    private let designHeight: CGFloat = 820
+
+    private func scale(for availableHeight: CGFloat) -> CGFloat {
+        min(1.0, max(0.6, availableHeight / designHeight))
+    }
 
     var body: some View {
-        ZStack {
-            LinearGradient(colors: [Color(red: 0.05, green: 0.30, blue: 0.20), Color(red: 0.03, green: 0.18, blue: 0.13)],
-                           startPoint: .top, endPoint: .bottom)
-                .ignoresSafeArea()
+        GeometryReader { geo in
+            let scale = scale(for: geo.size.height)
+            let cardWidth: CGFloat = 58 * scale
+            let cardHeight: CGFloat = 81 * scale
+            let gapMax: CGFloat = 60 * scale
+            let gapMin: CGFloat = 8 * scale
 
-            VStack(spacing: 16) {
-                scoreHeader
+            ZStack {
+                LinearGradient(colors: [Color(red: 0.05, green: 0.30, blue: 0.20), Color(red: 0.03, green: 0.18, blue: 0.13)],
+                               startPoint: .top, endPoint: .bottom)
+                    .ignoresSafeArea()
 
-                // Opponent hand (face down)
-                HStack(spacing: -14) {
-                    ForEach(0..<game.aiHand.count, id: \.self) { _ in
-                        CardBackView().frame(width: cardWidth * 0.7, height: cardHeight * 0.7)
-                    }
-                }
-                .frame(height: cardHeight * 0.7)
+                VStack(spacing: 16 * scale) {
+                    scoreHeader
 
-                capturedRow(cards: game.aiCaptured, title: "Opponent captured")
-
-                Spacer(minLength: 12).frame(maxHeight: 60)
-
-                fieldGrid
-                    .padding(20)
-                    .background(
-                        RoundedRectangle(cornerRadius: 24)
-                            .fill(RadialGradient(colors: [Color.white.opacity(0.10), Color.clear],
-                                                  center: .center, startRadius: 4, endRadius: 260))
-                    )
-
-                Spacer(minLength: 12).frame(maxHeight: 60)
-
-                capturedRow(cards: game.playerCaptured, title: "Your captures")
-
-                Text(game.message)
-                    .font(.system(size: 13, weight: .medium))
-                    .foregroundStyle(.white.opacity(0.85))
-                    .padding(.vertical, 2)
-
-                // Player hand (face up, tappable)
-                HStack(spacing: -8) {
-                    ForEach(game.playerHand) { card in
-                        Button {
-                            game.playerSelectHand(card)
-                        } label: {
-                            CardView(card: card, isSelectable: true)
-                                .frame(width: cardWidth, height: cardHeight)
+                    // Opponent hand (face down)
+                    HStack(spacing: -14) {
+                        ForEach(0..<game.aiHand.count, id: \.self) { _ in
+                            CardBackView().frame(width: cardWidth * 0.7, height: cardHeight * 0.7)
                         }
-                        .disabled(game.currentTurn != .player || game.turnPhase != .playFromHand)
-                        .buttonStyle(.plain)
                     }
+                    .frame(height: cardHeight * 0.7)
+
+                    capturedRow(cards: game.aiCaptured, title: "Opponent captured", cardWidth: cardWidth, cardHeight: cardHeight)
+
+                    Spacer(minLength: gapMin).frame(maxHeight: gapMax)
+
+                    fieldGrid(cardWidth: cardWidth, cardHeight: cardHeight)
+                        .padding(20 * scale)
+                        .background(
+                            RoundedRectangle(cornerRadius: 24)
+                                .fill(RadialGradient(colors: [Color.white.opacity(0.10), Color.clear],
+                                                      center: .center, startRadius: 4, endRadius: 260))
+                        )
+
+                    Spacer(minLength: gapMin).frame(maxHeight: gapMax)
+
+                    capturedRow(cards: game.playerCaptured, title: "Your captures", cardWidth: cardWidth, cardHeight: cardHeight)
+
+                    Text(game.message)
+                        .font(.system(size: 13, weight: .medium))
+                        .foregroundStyle(.white.opacity(0.85))
+                        .padding(.vertical, 2)
+
+                    // Player hand (face up, tappable)
+                    HStack(spacing: -8) {
+                        ForEach(game.playerHand) { card in
+                            Button {
+                                game.playerSelectHand(card)
+                            } label: {
+                                CardView(card: card, isSelectable: true)
+                                    .frame(width: cardWidth, height: cardHeight)
+                            }
+                            .disabled(game.currentTurn != .player || game.turnPhase != .playFromHand)
+                            .buttonStyle(.plain)
+                        }
+                    }
+                    .padding(.bottom, 8)
+
+                    Spacer(minLength: 0)
                 }
-                .padding(.bottom, 8)
+                .padding(.horizontal, 10)
+                .padding(.top, 8)
+                .frame(maxHeight: .infinity, alignment: .top)
 
-                Spacer(minLength: 0)
-            }
-            .padding(.horizontal, 10)
-            .padding(.top, 8)
-            .frame(maxHeight: .infinity, alignment: .top)
-
-            if case .chooseCaptureForHand(let matches) = game.turnPhase {
-                capturePicker(matches: matches) { game.playerChooseCapture($0) }
-            }
-            if case .chooseCaptureForDraw(_, let matches) = game.turnPhase {
-                capturePicker(matches: matches) { game.playerChooseDrawCapture($0) }
-            }
-            if case .koiKoiPrompt(let yaku, let points) = game.turnPhase {
-                koiKoiOverlay(yaku: yaku, points: points)
-            }
-            if case .handOver = game.turnPhase {
-                handOverOverlay
-            }
-            if case .matchOver = game.turnPhase {
-                matchOverOverlay
+                if case .chooseCaptureForHand(let matches) = game.turnPhase {
+                    capturePicker(matches: matches, cardWidth: cardWidth, cardHeight: cardHeight) { game.playerChooseCapture($0) }
+                }
+                if case .chooseCaptureForDraw(_, let matches) = game.turnPhase {
+                    capturePicker(matches: matches, cardWidth: cardWidth, cardHeight: cardHeight) { game.playerChooseDrawCapture($0) }
+                }
+                if case .koiKoiPrompt(let yaku, let points) = game.turnPhase {
+                    koiKoiOverlay(yaku: yaku, points: points)
+                }
+                if case .handOver = game.turnPhase {
+                    handOverOverlay
+                }
+                if case .matchOver = game.turnPhase {
+                    matchOverOverlay
+                }
             }
         }
         .navigationBarBackButtonHidden(true)
@@ -109,7 +124,7 @@ struct GameView: View {
         .padding(.horizontal, 6)
     }
 
-    private var fieldGrid: some View {
+    private func fieldGrid(cardWidth: CGFloat, cardHeight: CGFloat) -> some View {
         LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 6), count: 4), spacing: 8) {
             ForEach(game.field) { card in
                 CardView(card: card, isHighlighted: game.lastCaptured.contains(card))
@@ -119,7 +134,7 @@ struct GameView: View {
         .padding(.horizontal, 12)
     }
 
-    private func capturedRow(cards: [HanafudaCard], title: String) -> some View {
+    private func capturedRow(cards: [HanafudaCard], title: String, cardWidth: CGFloat, cardHeight: CGFloat) -> some View {
         VStack(alignment: .leading, spacing: 2) {
             Text("\(title) (\(cards.count))")
                 .font(.system(size: 10, weight: .medium))
@@ -137,7 +152,7 @@ struct GameView: View {
         .padding(.horizontal, 12)
     }
 
-    private func capturePicker(matches: [HanafudaCard], onChoose: @escaping (HanafudaCard) -> Void) -> some View {
+    private func capturePicker(matches: [HanafudaCard], cardWidth: CGFloat, cardHeight: CGFloat, onChoose: @escaping (HanafudaCard) -> Void) -> some View {
         VStack(spacing: 14) {
             Text("Choose a match").font(.system(size: 16, weight: .bold)).foregroundStyle(.white)
             HStack(spacing: 14) {
