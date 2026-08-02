@@ -129,7 +129,17 @@ known as Go-Stop in Korea with a Hwatu deck). Play vs AI at three difficulty lev
   which required the user to run it from a real Terminal.app window since Claude Code's
   `!` prefix doesn't give sudo a real TTY for the password prompt).
 
-  Next check-in: watch for Apple's review outcome on submission `5f16739f` (build 3) —
+  **2026-08-02 — 🟢 v1.0.1 (build 4) SUBMITTED, WAITING_FOR_REVIEW.** Bug found +
+  fixed this session: despite build 3's resubmission going through cleanly, the
+  `hanafudakoikoi.pro` IAP was never actually attached to any of the review
+  submissions (including this one) — it sat at `READY_TO_SUBMIT` since launch
+  while the app itself was `READY_FOR_SALE`, meaning nobody could buy Pro this
+  whole time. Same root cause hit across this app portfolio this week, see Sam
+  Loc's CLAUDE.md and `[[feedback_iap_must_ride_with_first_version_submission]]`.
+  Fixed by bumping to v1.0.1, ticking the IAP into a new draft submission via the
+  ASC web UI, attaching the new version via API, and submitting together.
+
+  Next check-in: watch for Apple's review outcome on v1.0.1 (build 4) —
   typically 24-48h. If rejected again, check
   `GET /v1/apps/6792249228/reviewSubmissions` for the reason.
 
