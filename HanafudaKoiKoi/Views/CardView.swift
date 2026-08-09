@@ -18,11 +18,11 @@ struct CardView: View {
 
     private var kindLabel: String {
         switch card.kind {
-        case .bright: return "BRIGHT"
-        case .animal: return "ANIMAL"
-        case .ribbonPoetry: return "POETRY"
-        case .ribbonBlue: return "RIBBON"
-        case .ribbonRed, .ribbonPlain: return "RIBBON"
+        case .bright: return L("cardkind.bright")
+        case .animal: return L("cardkind.animal")
+        case .ribbonPoetry: return L("cardkind.poetry")
+        case .ribbonBlue: return L("cardkind.ribbon")
+        case .ribbonRed, .ribbonPlain: return L("cardkind.ribbon")
         case .plain: return ""
         }
     }
@@ -49,7 +49,7 @@ struct CardView: View {
                         .font(.system(size: 20, weight: .semibold))
                         .foregroundStyle(accentColor)
                         .shadow(color: .black.opacity(0.35), radius: 1, y: 1)
-                    Text(card.name)
+                    Text(card.localizedName)
                         .font(.system(size: 8.5, weight: .semibold, design: .rounded))
                         .foregroundStyle(.white)
                         .multilineTextAlignment(.center)
@@ -67,18 +67,54 @@ struct CardView: View {
     }
 }
 
+/// Pro-only alternate card-back designs (see `UpgradeView`/`PurchaseManager.isPro`).
+enum CardBackStyle: String, CaseIterable, Identifiable {
+    case ink, sakura
+
+    var id: String { rawValue }
+
+    var titleKey: String {
+        switch self {
+        case .ink: return "cardback.ink"
+        case .sakura: return "cardback.sakura"
+        }
+    }
+
+    fileprivate var colors: [Color] {
+        switch self {
+        case .ink: return [Color(red: 0.15, green: 0.18, blue: 0.28), Color(red: 0.08, green: 0.09, blue: 0.16)]
+        case .sakura: return [Color(red: 0.42, green: 0.14, blue: 0.24), Color(red: 0.20, green: 0.06, blue: 0.14)]
+        }
+    }
+
+    fileprivate var accent: Color {
+        switch self {
+        case .ink: return .yellow
+        case .sakura: return Color(red: 1.0, green: 0.68, blue: 0.78)
+        }
+    }
+
+    fileprivate var symbol: String {
+        switch self {
+        case .ink: return "leaf.fill"
+        case .sakura: return "sparkle"
+        }
+    }
+}
+
 struct CardBackView: View {
+    var style: CardBackStyle = .ink
+
     var body: some View {
         RoundedRectangle(cornerRadius: 9)
-            .fill(LinearGradient(colors: [Color(red: 0.15, green: 0.18, blue: 0.28), Color(red: 0.08, green: 0.09, blue: 0.16)],
-                                  startPoint: .top, endPoint: .bottom))
+            .fill(LinearGradient(colors: style.colors, startPoint: .top, endPoint: .bottom))
             .overlay(
-                RoundedRectangle(cornerRadius: 9).stroke(Color.yellow.opacity(0.5), lineWidth: 1)
+                RoundedRectangle(cornerRadius: 9).stroke(style.accent.opacity(0.5), lineWidth: 1)
             )
             .overlay(
-                Image(systemName: "leaf.fill")
+                Image(systemName: style.symbol)
                     .font(.system(size: 16))
-                    .foregroundStyle(.yellow.opacity(0.6))
+                    .foregroundStyle(style.accent.opacity(0.6))
             )
     }
 }

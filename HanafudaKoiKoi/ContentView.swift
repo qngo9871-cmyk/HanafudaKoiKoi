@@ -5,12 +5,18 @@ struct ContentView: View {
 
     var body: some View {
         #if DEBUG
+        if let lang = ProcessInfo.processInfo.environment["HK_LANG"], let l = AppLanguage(rawValue: lang) {
+            LocalizationManager.shared.setLanguage(l)
+        }
         if let capture = ProcessInfo.processInfo.environment["HK_CAPTURE"], capture != "home" {
             if capture == "onboarding" {
                 return AnyView(OnboardingView(onFinished: {}))
             }
             if capture == "upgrade" {
                 return AnyView(UpgradeView().preferredColorScheme(.dark))
+            }
+            if capture == "yakuguide" {
+                return AnyView(YakuGuideView().preferredColorScheme(.dark))
             }
             let game = GameModel()
             game.captureSetup(capture)

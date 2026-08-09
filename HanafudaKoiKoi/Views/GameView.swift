@@ -3,6 +3,10 @@ import SwiftUI
 struct GameView: View {
     @ObservedObject var game: GameModel
     @Environment(\.dismiss) private var dismiss
+    @AppStorage("cardBackStyle") private var cardBackStyleRaw = CardBackStyle.ink.rawValue
+    @State private var passOverlayVisible = false
+
+    private var cardBackStyle: CardBackStyle { CardBackStyle(rawValue: cardBackStyleRaw) ?? .ink }
 
     // Design height the fixed-size board elements below were sized for (full-height iPhone).
     // On shorter viewports — iPhone SE, or an iPad running this iPhone-only app in its
@@ -13,6 +17,25 @@ struct GameView: View {
     private func scale(for availableHeight: CGFloat) -> CGFloat {
         min(1.0, max(0.6, availableHeight / designHeight))
     }
+
+    /// In vsAI mode the bottom seat is always the human player. In local two-player mode
+    /// the bottom (face-up, tappable) seat is whichever human's turn it currently is.
+    private var bottomSeatIsPlayer: Bool {
+        game.mode != .twoPlayer || game.currentTurn == .player
+    }
+    private var bottomHand: [HanafudaCard] { bottomSeatIsPlayer ? game.playerHand : game.aiHand }
+    private var topHandCount: Int { bottomSeatIsPlayer ? game.aiHand.count : game.playerHand.count }
+
+    private var topLabel: String {
+        if game.mode != .twoPlayer { return L("game.opponentCaptured") }
+        return bottomSeatIsPlayer ? L("game.player2Captured") : L("game.player1Captured")
+    }
+    private var bottomLabel: String {
+        if game.mode != .twoPlayer { return L("game.yourCaptures") }
+        return bottomSeatIsPlayer ? L("game.player1Captured") : L("game.player2Captured")
+    }
+    private var topCaptured: [HanafudaCard] { bottomSeatIsPlayer ? game.aiCaptured : game.playerCaptured }
+    private var bottomCaptured: [HanafudaCard] { bottomSeatIsPlayer ? game.playerCaptured : game.aiCaptured }
 
     var body: some View {
         GeometryReader { geo in
@@ -30,15 +53,15 @@ struct GameView: View {
                 VStack(spacing: 16 * scale) {
                     scoreHeader
 
-                    // Opponent hand (face down)
+                    // Away hand (face down)
                     HStack(spacing: -14) {
-                        ForEach(0..<game.aiHand.count, id: \.self) { _ in
-                            CardBackView().frame(width: cardWidth * 0.7, height: cardHeight * 0.7)
+                        ForEach(0..<topHandCount, id: \.self) { _ in
+                            CardBackView(style: cardBackStyle).frame(width: cardWidth * 0.7, height: cardHeight * 0.7)
                         }
                     }
                     .frame(height: cardHeight * 0.7)
 
-                    capturedRow(cards: game.aiCaptured, title: "Opponent captured", cardWidth: cardWidth, cardHeight: cardHeight)
+                    capturedRow(cards: topCaptured, title: topLabel, cardWidth: cardWidth, cardHeight: cardHeight)
 
                     Spacer(minLength: gapMin).frame(maxHeight: gapMax)
 
@@ -52,23 +75,23 @@ struct GameView: View {
 
                     Spacer(minLength: gapMin).frame(maxHeight: gapMax)
 
-                    capturedRow(cards: game.playerCaptured, title: "Your captures", cardWidth: cardWidth, cardHeight: cardHeight)
+                    capturedRow(cards: bottomCaptured, title: bottomLabel, cardWidth: cardWidth, cardHeight: cardHeight)
 
                     Text(game.message)
                         .font(.system(size: 13, weight: .medium))
                         .foregroundStyle(.white.opacity(0.85))
                         .padding(.vertical, 2)
 
-                    // Player hand (face up, tappable)
+                    // Active hand (face up, tappable)
                     HStack(spacing: -8) {
-                        ForEach(game.playerHand) { card in
+                        ForEach(bottomHand) { card in
                             Button {
-                                game.playerSelectHand(card)
+                                game.selectFromHand(card)
                             } label: {
                                 CardView(card: card, isSelectable: true)
                                     .frame(width: cardWidth, height: cardHeight)
                             }
-                            .disabled(game.currentTurn != .player || game.turnPhase != .playFromHand)
+                            .disabled(game.turnPhase != .playFromHand)
                             .buttonStyle(.plain)
                         }
                     }
@@ -95,29 +118,41 @@ struct GameView: View {
                 if case .matchOver = game.turnPhase {
                     matchOverOverlay
                 }
+
+                if game.mode == .twoPlayer && passOverlayVisible {
+                    passDeviceOverlay
+                }
             }
         }
         .navigationBarBackButtonHidden(true)
         .toolbar {
             ToolbarItem(placement: .topBarLeading) {
-                Button("Quit") { dismiss() }.foregroundStyle(.white.opacity(0.8))
+                Button(L("game.quit")) { dismiss() }.foregroundStyle(.white.opacity(0.8))
             }
+        }
+        .onAppear {
+            if game.mode == .twoPlayer { passOverlayVisible = true }
+        }
+        .onChange(of: game.currentTurn) { _ in
+            if game.mode == .twoPlayer { passOverlayVisible = true }
         }
     }
 
     private var scoreHeader: some View {
         HStack {
             VStack(alignment: .leading, spacing: 1) {
-                Text("Opponent").font(.system(size: 11)).foregroundStyle(.white.opacity(0.6))
+                Text(game.mode == .twoPlayer ? L("game.player2") : L("game.opponentLabel"))
+                    .font(.system(size: 11)).foregroundStyle(.white.opacity(0.6))
                 Text("\(game.aiMatchScore)").font(.system(size: 20, weight: .bold, design: .rounded)).foregroundStyle(.white)
             }
             Spacer()
-            Text("Hand \(game.handNumber)/\(GameModel.handsPerMatch)")
+            Text(String(format: L("game.handLabel"), game.handNumber, GameModel.handsPerMatch))
                 .font(.system(size: 12, weight: .semibold))
                 .foregroundStyle(.white.opacity(0.7))
             Spacer()
             VStack(alignment: .trailing, spacing: 1) {
-                Text("You").font(.system(size: 11)).foregroundStyle(.white.opacity(0.6))
+                Text(game.mode == .twoPlayer ? L("game.player1") : L("game.youLabel"))
+                    .font(.system(size: 11)).foregroundStyle(.white.opacity(0.6))
                 Text("\(game.playerMatchScore)").font(.system(size: 20, weight: .bold, design: .rounded)).foregroundStyle(.white)
             }
         }
@@ -154,7 +189,7 @@ struct GameView: View {
 
     private func capturePicker(matches: [HanafudaCard], cardWidth: CGFloat, cardHeight: CGFloat, onChoose: @escaping (HanafudaCard) -> Void) -> some View {
         VStack(spacing: 14) {
-            Text("Choose a match").font(.system(size: 16, weight: .bold)).foregroundStyle(.white)
+            Text(L("game.chooseMatch")).font(.system(size: 16, weight: .bold)).foregroundStyle(.white)
             HStack(spacing: 14) {
                 ForEach(matches) { card in
                     Button { onChoose(card) } label: {
@@ -172,7 +207,7 @@ struct GameView: View {
 
     private func koiKoiOverlay(yaku: [Yaku], points: Int) -> some View {
         VStack(spacing: 16) {
-            Text("Yaku!").font(.system(size: 22, weight: .heavy, design: .rounded)).foregroundStyle(.yellow)
+            Text(L("game.yaku")).font(.system(size: 22, weight: .heavy, design: .rounded)).foregroundStyle(.yellow)
             ForEach(yaku) { y in
                 HStack {
                     Text(y.name).foregroundStyle(.white)
@@ -182,19 +217,19 @@ struct GameView: View {
                 .font(.system(size: 14, weight: .medium))
                 .frame(width: 220)
             }
-            Text("Total: \(points) pts").font(.system(size: 16, weight: .bold)).foregroundStyle(.white)
+            Text(String(format: L("game.total"), points)).font(.system(size: 16, weight: .bold)).foregroundStyle(.white)
 
             HStack(spacing: 12) {
-                Button { game.playerCallsKoiKoi() } label: {
-                    Text("Koi-Koi\n(keep going)")
+                Button { game.callsKoiKoi() } label: {
+                    Text(L("game.koiKoiButton"))
                         .multilineTextAlignment(.center)
                         .font(.system(size: 14, weight: .bold))
                         .foregroundStyle(.black)
                         .padding(.horizontal, 18).padding(.vertical, 12)
                         .background(RoundedRectangle(cornerRadius: 12).fill(Color.yellow))
                 }
-                Button { game.playerCallsShoubu() } label: {
-                    Text("Shoubu\n(bank it)")
+                Button { game.callsShoubu() } label: {
+                    Text(L("game.shoubuButton"))
                         .multilineTextAlignment(.center)
                         .font(.system(size: 14, weight: .bold))
                         .foregroundStyle(.white)
@@ -215,7 +250,7 @@ struct GameView: View {
                 .multilineTextAlignment(.center)
                 .foregroundStyle(.white)
             Button { game.continueToNextHand() } label: {
-                Text("Next Hand")
+                Text(L("game.nextHand"))
                     .font(.system(size: 15, weight: .bold))
                     .foregroundStyle(.black)
                     .padding(.horizontal, 24).padding(.vertical, 12)
@@ -237,7 +272,7 @@ struct GameView: View {
                 .font(.system(size: 22, weight: .bold, design: .rounded))
                 .foregroundStyle(.white)
             Button { dismiss() } label: {
-                Text("Back to Menu")
+                Text(L("game.backToMenu"))
                     .font(.system(size: 15, weight: .bold))
                     .foregroundStyle(.black)
                     .padding(.horizontal, 24).padding(.vertical, 12)
@@ -249,11 +284,36 @@ struct GameView: View {
         .padding(.horizontal, 30)
     }
 
+    /// Full-screen privacy gate shown between turns in local two-player mode, so a
+    /// player doesn't see the other's hand while passing the device across the table.
+    private var passDeviceOverlay: some View {
+        ZStack {
+            Color.black.opacity(0.97).ignoresSafeArea()
+            VStack(spacing: 20) {
+                Image(systemName: "hand.tap.fill")
+                    .font(.system(size: 40))
+                    .foregroundStyle(.yellow)
+                Text(String(format: L("game.passToPlayer"), game.currentTurn == .player ? L("game.player1") : L("game.player2")))
+                    .font(.system(size: 20, weight: .bold, design: .rounded))
+                    .foregroundStyle(.white)
+                    .multilineTextAlignment(.center)
+                    .padding(.horizontal, 40)
+                Button { passOverlayVisible = false } label: {
+                    Text(L("game.readyReveal"))
+                        .font(.system(size: 15, weight: .bold))
+                        .foregroundStyle(.black)
+                        .padding(.horizontal, 28).padding(.vertical, 14)
+                        .background(RoundedRectangle(cornerRadius: 14).fill(Color.yellow))
+                }
+            }
+        }
+    }
+
     private var matchResultText: String {
         switch game.matchWinner {
-        case .player: return "You win the match!"
-        case .ai: return "Opponent wins the match."
-        case nil: return "Match tied."
+        case .player: return game.mode == .twoPlayer ? String(format: L("game.playerWinsMatch"), L("game.player1")) : L("game.youWinMatch")
+        case .ai: return game.mode == .twoPlayer ? String(format: L("game.playerWinsMatch"), L("game.player2")) : L("game.opponentWinsMatch")
+        case nil: return L("game.matchTied")
         }
     }
 }

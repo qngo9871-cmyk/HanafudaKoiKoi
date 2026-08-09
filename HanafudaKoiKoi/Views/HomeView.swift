@@ -1,11 +1,13 @@
 import SwiftUI
 
 struct HomeView: View {
+    @EnvironmentObject var loc: LocalizationManager
     @StateObject private var game = GameModel()
     @StateObject private var purchases = PurchaseManager.shared
     @State private var showGame = false
     @State private var showUpgrade = false
     @State private var showHowToPlay = false
+    @State private var showYakuGuide = false
     @State private var pendingDifficulty: AIDifficulty = .normal
 
     var body: some View {
@@ -29,37 +31,62 @@ struct HomeView: View {
                 }
                 .allowsHitTesting(false)
 
-                VStack(spacing: 28) {
-                    Spacer(minLength: 40).frame(maxHeight: 90)
+                ScrollView {
+                    VStack(spacing: 24) {
+                        Spacer(minLength: 40).frame(maxHeight: 70)
 
-                    VStack(spacing: 6) {
-                        Image(systemName: "leaf.fill")
-                            .font(.system(size: 44))
-                            .foregroundStyle(.yellow)
-                        Text("Koi-Koi")
-                            .font(.system(size: 40, weight: .heavy, design: .rounded))
-                            .foregroundStyle(.white)
-                        Text("Hanafuda · Go-Stop · Hwatu")
-                            .font(.system(size: 15, weight: .medium))
-                            .foregroundStyle(.white.opacity(0.65))
-                    }
+                        VStack(spacing: 6) {
+                            Image(systemName: "leaf.fill")
+                                .font(.system(size: 44))
+                                .foregroundStyle(.yellow)
+                            Text(L("home.title"))
+                                .font(.system(size: 40, weight: .heavy, design: .rounded))
+                                .foregroundStyle(.white)
+                            Text(L("home.subtitle"))
+                                .font(.system(size: 15, weight: .medium))
+                                .foregroundStyle(.white.opacity(0.65))
+                        }
 
-                    VStack(spacing: 14) {
-                        ForEach(AIDifficulty.allCases, id: \.self) { level in
+                        VStack(spacing: 14) {
+                            ForEach(AIDifficulty.allCases, id: \.self) { level in
+                                Button {
+                                    if level == .hard && !purchases.isPro {
+                                        showUpgrade = true
+                                    } else {
+                                        pendingDifficulty = level
+                                        game.startNewMatch(difficulty: level)
+                                        showGame = true
+                                    }
+                                } label: {
+                                    HStack {
+                                        Text(label(for: level))
+                                            .font(.system(size: 17, weight: .semibold, design: .rounded))
+                                        Spacer()
+                                        if level == .hard && !purchases.isPro {
+                                            Image(systemName: "lock.fill").font(.system(size: 14))
+                                        } else {
+                                            Image(systemName: "chevron.right").font(.system(size: 14))
+                                        }
+                                    }
+                                    .foregroundStyle(.white)
+                                    .padding(.horizontal, 20).padding(.vertical, 16)
+                                    .background(RoundedRectangle(cornerRadius: 14).fill(Color.white.opacity(0.08)))
+                                }
+                            }
+
                             Button {
-                                if level == .hard && !purchases.isPro {
+                                if !purchases.isPro {
                                     showUpgrade = true
                                 } else {
-                                    pendingDifficulty = level
-                                    game.startNewMatch(difficulty: level)
+                                    game.startLocalTwoPlayerMatch()
                                     showGame = true
                                 }
                             } label: {
                                 HStack {
-                                    Text(label(for: level))
+                                    Text(L("home.twoPlayer"))
                                         .font(.system(size: 17, weight: .semibold, design: .rounded))
                                     Spacer()
-                                    if level == .hard && !purchases.isPro {
+                                    if !purchases.isPro {
                                         Image(systemName: "lock.fill").font(.system(size: 14))
                                     } else {
                                         Image(systemName: "chevron.right").font(.system(size: 14))
@@ -70,24 +97,40 @@ struct HomeView: View {
                                 .background(RoundedRectangle(cornerRadius: 14).fill(Color.white.opacity(0.08)))
                             }
                         }
-                    }
-                    .padding(.horizontal, 28)
+                        .padding(.horizontal, 28)
 
-                    Button { showHowToPlay = true } label: {
-                        Text("How to Play")
-                            .font(.system(size: 14, weight: .semibold))
-                            .foregroundStyle(.white.opacity(0.85))
-                    }
-
-                    Spacer()
-
-                    if !purchases.isPro {
-                        Button { showUpgrade = true } label: {
-                            Text("Unlock Pro — Hard AI, Local 2-Player & Card Backs")
-                                .font(.system(size: 13, weight: .semibold))
-                                .foregroundStyle(.yellow)
+                        HStack(spacing: 20) {
+                            Button { showHowToPlay = true } label: {
+                                Text(L("home.howToPlay"))
+                                    .font(.system(size: 14, weight: .semibold))
+                                    .foregroundStyle(.white.opacity(0.85))
+                            }
+                            Button { showYakuGuide = true } label: {
+                                Text(L("home.yakuGuide"))
+                                    .font(.system(size: 14, weight: .semibold))
+                                    .foregroundStyle(.white.opacity(0.85))
+                            }
                         }
-                        .padding(.bottom, 20)
+
+                        if !purchases.isPro {
+                            Button { showUpgrade = true } label: {
+                                Text(L("home.upgradeTeaser"))
+                                    .font(.system(size: 13, weight: .semibold))
+                                    .foregroundStyle(.yellow)
+                                    .multilineTextAlignment(.center)
+                                    .padding(.horizontal, 30)
+                            }
+                        }
+
+                        Picker("", selection: $loc.language) {
+                            ForEach(AppLanguage.allCases) { lang in
+                                Text(lang.displayName).tag(lang)
+                            }
+                        }
+                        .pickerStyle(.segmented)
+                        .frame(maxWidth: 220)
+                        .padding(.top, 8)
+                        .padding(.bottom, 24)
                     }
                 }
             }
@@ -98,7 +141,13 @@ struct HomeView: View {
                 UpgradeView()
             }
             .sheet(isPresented: $showHowToPlay) {
-                OnboardingView(onFinished: { showHowToPlay = false })
+                OnboardingView(onFinished: { showHowToPlay = false }, onOpenYakuGuide: {
+                    showHowToPlay = false
+                    showYakuGuide = true
+                })
+            }
+            .sheet(isPresented: $showYakuGuide) {
+                YakuGuideView()
             }
             .task { await purchases.loadProduct() }
         }
@@ -115,11 +164,11 @@ struct HomeView: View {
 
     private func label(for level: AIDifficulty) -> String {
         switch level {
-        case .easy: return "Play — Easy"
-        case .normal: return "Play — Normal"
-        case .hard: return "Play — Hard"
+        case .easy: return L("home.play.easy")
+        case .normal: return L("home.play.normal")
+        case .hard: return L("home.play.hard")
         }
     }
 }
 
-#Preview { HomeView() }
+#Preview { HomeView().environmentObject(LocalizationManager.shared) }

@@ -1,19 +1,34 @@
 # Hanafuda Koi-Koi Go-Stop
 
 Native iOS app for playing Koi-Koi (Japanese hanafuda flower-card matching game, also
-known as Go-Stop in Korea with a Hwatu deck). Play vs AI at three difficulty levels.
+known as Go-Stop in Korea with a Hwatu deck). Play vs AI at three difficulty levels, or
+pass-and-play locally against a second human (Pro).
+
+**Status: 🟡 READY FOR RESUBMISSION AFTER 2026-08-18, pending Apple's Guideline 5.6 account
+hold.** The whole developer account (19 apps, including this one) was hit with a Guideline
+5.6 "Developer Code of Conduct — Review Suspended" flag, almost certainly triggered by
+submitting ~19 similar template-style apps within an 8-day window (2026-08-01 through
+2026-08-08). This is an account-level flag, not a per-app rejection — resubmission is
+hard-blocked until 2026-08-18. Prior state: v1.0.1 (build 4) submitted 2026-08-02,
+WAITING_FOR_REVIEW. **Do not touch App Store Connect or resubmit before 2026-08-18.**
 
 ## Stack
 - iOS (Swift/SwiftUI), iOS 16.0+
 - StoreKit 2 (Products.storekit present)
 - No external APIs, fully offline
 - XcodeGen (`project.yml`) — run `xcodegen generate` after editing project.yml
+- Localization: manual bundle-swap `L()`/`LocalizationManager` (`Core/Localization.swift`),
+  `en.lproj`/`ja.lproj` — same house pattern as PhomTaLa/SamLoc/etc.
 
 ## Project Structure
-- `HanafudaKoiKoi/Core/` — HanafudaCard (deck), YakuScorer, AIPlayer, GameModel, PurchaseManager
-- `HanafudaKoiKoi/Views/` — HomeView, GameView, CardView, UpgradeView
+- `HanafudaKoiKoi/Core/` — HanafudaCard (deck), YakuScorer, AIPlayer, GameModel,
+  PurchaseManager, Localization
+- `HanafudaKoiKoi/Views/` — HomeView, GameView, CardView, UpgradeView, OnboardingView,
+  YakuGuideView
 - `rebuild.sh` — regenerate + rebuild
-- `capture_shots.py` — real in-app App Store screenshots via `HK_CAPTURE` DEBUG hook
+- `capture_shots.py` / `capture_shots_ja.py` — real in-app App Store screenshots via
+  `HK_CAPTURE` DEBUG hook (not updated this pass for the new `yakuguide`/2-player scenarios —
+  fine for now since no re-screenshot is planned before 2026-08-18)
 
 ## Key Decisions
 - Original vector card art (SwiftUI shapes + SF Symbols + text labels), not licensed
@@ -142,6 +157,115 @@ known as Go-Stop in Korea with a Hwatu deck). Play vs AI at three difficulty lev
   Next check-in: watch for Apple's review outcome on v1.0.1 (build 4) —
   typically 24-48h. If rejected again, check
   `GET /v1/apps/6792249228/reviewSubmissions` for the reason.
+
+  **2026-08-09 — Pre-resubmission quality pass (code-only, no ASC actions).** The whole
+  developer account got a Guideline 5.6 review-suspended flag for submitting 19
+  similar apps in an 8-day window; this session's job was a genuine local review/fix
+  pass on this app while the account is hard-blocked until 2026-08-18. Bumped to
+  **v1.1.0, build 5** (`project.yml`).
+
+  **Real bug fixed — koi-koi score-doubling was wrong.** `settleHand()` only doubled
+  the winner's score by *their own* koi-koi calls (`koiKoiCalls[winner]`). Standard
+  rule: the score doubles once per koi-koi call made during the hand *by either
+  player* — the whole point of the mechanic is that calling koi-koi is a gamble that
+  raises the stakes for whoever ends up winning, even if that turns out to be the
+  opponent. Fixed to sum both seats' calls (`GameModel.swift`). This was silently
+  under-scoring hands where the loser had called koi-koi and the winner hadn't —
+  a real, user-visible scoring-correctness bug, not cosmetic.
+
+  **Real bug fixed — Pro sold two features that didn't exist.** `UpgradeView` and
+  the IAP's own `Products.storekit` description advertised "Local two-player mode"
+  and "Alternate card back designs" as Pro perks; neither existed anywhere in the
+  code (`HomeView` only had 3 AI-difficulty buttons, `CardBackView` was a single
+  hardcoded design). Since v1.0.1 already shipped with this claim and may have real
+  paying Pro purchasers, the fix was to build both features for real rather than
+  quietly walk back the copy:
+  - **Local two-player (pass-and-play)**: `GameModel` gained a `GameMode` (`vsAI` /
+    `twoPlayer`). In `twoPlayer` mode seat `.ai` (labelled "Player 2") is human-driven
+    through the same code paths as `.player` — capture-choice prompts, koi-koi/shoubu
+    decisions (generalized to `callsKoiKoi()`/`callsShoubu()` keyed off `currentTurn`
+    instead of hardcoded to `.player`), and hand-card selection
+    (`selectFromHand(_:)`). `GameView` swaps which hand is face-up/tappable based on
+    whose turn it is, relabels captured-row/score-header text ("Player 1"/"Player 2"
+    instead of "You"/"Opponent"), and shows a full-screen "pass the device" privacy
+    gate between turns so a player doesn't see the other's hand mid-pass. Entry point:
+    "Local Two-Player" on Home, Pro-gated same as Hard AI.
+  - **Alternate card backs**: `CardBackStyle` enum (Ink Leaf / Sakura, distinct
+    gradient+accent+icon), a picker in `UpgradeView` (visible once Pro), persisted via
+    `@AppStorage("cardBackStyle")`, read by `GameView` for whichever hand is face-down.
+  - Also fixed a small related bug while in there: `UpgradeView` showed an infinite
+    "loading product" spinner for Pro users who have nothing left to buy — reordered
+    the condition to check `isPro` first.
+  - Verified via DEBUG capture-hook screenshots (`HK_CAPTURE=upgrade`) that the picker
+    renders and both styles are visually distinct in both languages. **Not verified via
+    live interactive tap-through** — no idb/XCUITest tooling available in this
+    environment (same documented limitation as sibling apps' review passes); the
+    turn-swap/pass-gate logic is verified by code review + the deterministic capture
+    scenarios (which exercise real `GameModel` state), not a live full two-player game.
+
+  **Bilingual localization added — was entirely missing.** Despite the App Store
+  listing itself being bilingual (en-US + hand-written ja per the Key Decisions above),
+  there was **zero in-app localization infrastructure** — no `.lproj`, no
+  `NSLocalizedString`, no `L()` — every on-screen string, including all 25 card names
+  and all 13 yaku names, was hardcoded English. This violates the standing
+  bilingual-by-default rule. Fixed properly, matching the house `L()`/
+  `LocalizationManager` pattern used by PhomTaLa/SamLoc/etc. (manual bundle-swap so
+  language changes live without relaunching):
+  - `Core/Localization.swift` (new), `en.lproj`/`ja.lproj/Localizable.strings` (new,
+    ~180 keys each, verified identical key sets via `diff`).
+  - Every card name and yaku name is now looked up via `nameKey`/`localizedName`
+    (`HanafudaCard`, `Yaku` in `YakuScorer.swift`) rather than a hardcoded English
+    string — the Japanese card/yaku names are the **authentic traditional terms**
+    (松, 鶴, 五光, 猪鹿蝶, 赤短, etc.), not transliterations of the English, since this
+    is a real Japanese game and those terms are public-domain game vocabulary (not the
+    licensed artwork this app deliberately avoids).
+  - Language picker (segmented, EN/日本語) on Home, persisted across launches. Debug
+    hook `HK_LANG` added to `ContentView` for capture scripts, mirroring `HK_CAPTURE`.
+  - Verified via DEBUG capture-hook screenshots in both languages across all screens
+    (home, onboarding, table/yaku-prompt, match-over, upgrade, yaku guide) — correct
+    Japanese rendering (Hiragino, no tofu boxes/mojibake), no untranslated strings, no
+    layout breakage from longer/shorter Japanese text.
+
+  **Yaku scoring guide added.** The existing onboarding (4-page walkthrough) explained
+  the *mechanic* of yaku/koi-koi but never listed the actual yaku or their point
+  values — didn't fully satisfy the standing "explain the scoring" rule. Added
+  `YakuGuideView` (new): all 13 yaku with point value + plain-language description,
+  reachable from Home ("Yaku Guide") and from Onboarding's "Collect Yaku" page ("See
+  the full Yaku Guide →"). `YakuScorer.referenceList` is the static data source.
+
+  **Reviewed and confirmed already correct:**
+  - Yaku detection logic (`YakuScorer.swift`) — re-verified every yaku against the
+    standard rule set: brights (5/4/3, rain-man exclusion on 3-bright and the
+    Shikou/Ame-Shikou split on 4-bright are both correctly implemented), Tane/Ino-
+    Shika-Chou, Tanzaku/Akatan/Aotan/combo, Kasu, Tsukimi-zake/Hanami-zake. The 48-card
+    deck (`HanafudaCard.swift`) matches the real hanafuda deck exactly: 5 brights, 9
+    animals, 10 ribbons (3 poetry + 3 plain-red + 3 blue + 1 plain), 24 chaff.
+  - `PurchaseManager`'s `#if DEBUG { isPro = true }` is the only DEBUG special-case in
+    the purchase path and doesn't double-gate against any other isPro check — no
+    instance of this developer's recurring DEBUG/isPro double-gating bug found here.
+  - No TODO/FIXME/placeholder/Lorem-ipsum/dummy text anywhere in the source tree (full
+    grep sweep, zero hits, before and after this pass).
+  - `xcodegen generate` + both Debug and Release builds for iOS Simulator: clean, zero
+    warnings besides the routine "no AppIntents.framework dependency" notice,
+    `BUILD SUCCEEDED`. Toolchain (`xcodegen`, `xcode-select`) confirmed working.
+
+  **Differentiation work this pass:** local two-player and alternate card backs (above)
+  are genuinely new functionality, not just bug fixes — but they were scoped as bug
+  fixes (undelivered paid features) rather than discretionary differentiation, per the
+  "prioritize correctness over redesign" guidance for this review wave. The Yaku Guide
+  is the one purely-additive differentiation piece.
+
+  **Still open / left for a future pass (not blocking resubmission):**
+  - No live device sideload or interactive tap-through (idb/XCUITest) of a full local
+    two-player match was performed — code-review + capture-scenario verification only.
+    If time allows before 2026-08-18, worth a manual playtest specifically of the
+    pass-and-play flow (turn handoff, capture-choice prompts on Player 2's turn,
+    koi-koi decision on Player 2's turn) since it's the least-tested new surface.
+  - `capture_shots.py`/`capture_shots_ja.py` were not updated for the new `yakuguide`
+    scenario or a local-two-player screenshot — not needed unless a screenshot refresh
+    is planned before resubmission.
+  - Card-back designs are palette-only (no new art/texture) — fine for now, same
+    "revisit if conversion data justifies it" note as sibling apps.
 
 ## Instructions for Claude Code
 At the end of every session, update the Current State section to reflect progress made.

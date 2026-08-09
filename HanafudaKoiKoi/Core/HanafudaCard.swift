@@ -21,8 +21,12 @@ struct HanafudaCard: Identifiable, Equatable, Hashable {
     let id: Int
     let month: Int          // 1...12
     let kind: CardKind
-    let name: String
+    let name: String        // canonical English identifier, not shown in UI
+    let nameKey: String     // Localizable.strings key for the on-card label
     let symbol: String      // SF Symbol used on the card face
+
+    /// Localized card-face label — always use this for display, never `name` directly.
+    var localizedName: String { L(nameKey) }
 
     static func == (lhs: HanafudaCard, rhs: HanafudaCard) -> Bool { lhs.id == rhs.id }
     func hash(into hasher: inout Hasher) { hasher.combine(id) }
@@ -34,82 +38,82 @@ enum HanafudaDeck {
     static let fullDeck: [HanafudaCard] = {
         var id = 0
         var cards: [HanafudaCard] = []
-        func add(_ month: Int, _ kind: CardKind, _ name: String, _ symbol: String) {
-            cards.append(HanafudaCard(id: id, month: month, kind: kind, name: name, symbol: symbol))
+        func add(_ month: Int, _ kind: CardKind, _ name: String, _ nameKey: String, _ symbol: String) {
+            cards.append(HanafudaCard(id: id, month: month, kind: kind, name: name, nameKey: nameKey, symbol: symbol))
             id += 1
         }
 
         // 1 — Pine
-        add(1, .bright, "Crane", "bird.fill")
-        add(1, .ribbonPoetry, "Poetry Ribbon", "scroll.fill")
-        add(1, .plain, "Pine", "leaf.fill")
-        add(1, .plain, "Pine", "leaf.fill")
+        add(1, .bright, "Crane", "card.crane", "bird.fill")
+        add(1, .ribbonPoetry, "Poetry Ribbon", "card.poetryRibbon", "scroll.fill")
+        add(1, .plain, "Pine", "card.pine", "leaf.fill")
+        add(1, .plain, "Pine", "card.pine", "leaf.fill")
 
         // 2 — Plum
-        add(2, .animal, "Bush Warbler", "bird")
-        add(2, .ribbonPoetry, "Poetry Ribbon", "scroll.fill")
-        add(2, .plain, "Plum Blossom", "leaf.fill")
-        add(2, .plain, "Plum Blossom", "leaf.fill")
+        add(2, .animal, "Bush Warbler", "card.bushWarbler", "bird")
+        add(2, .ribbonPoetry, "Poetry Ribbon", "card.poetryRibbon", "scroll.fill")
+        add(2, .plain, "Plum Blossom", "card.plumBlossom", "leaf.fill")
+        add(2, .plain, "Plum Blossom", "card.plumBlossom", "leaf.fill")
 
         // 3 — Cherry Blossom
-        add(3, .bright, "Curtain", "flag.fill")
-        add(3, .ribbonPoetry, "Poetry Ribbon", "scroll.fill")
-        add(3, .plain, "Cherry Blossom", "leaf.fill")
-        add(3, .plain, "Cherry Blossom", "leaf.fill")
+        add(3, .bright, "Curtain", "card.curtain", "flag.fill")
+        add(3, .ribbonPoetry, "Poetry Ribbon", "card.poetryRibbon", "scroll.fill")
+        add(3, .plain, "Cherry Blossom", "card.cherryBlossom", "leaf.fill")
+        add(3, .plain, "Cherry Blossom", "card.cherryBlossom", "leaf.fill")
 
         // 4 — Wisteria
-        add(4, .animal, "Cuckoo", "bird")
-        add(4, .ribbonRed, "Ribbon", "ribbon")
-        add(4, .plain, "Wisteria", "leaf.fill")
-        add(4, .plain, "Wisteria", "leaf.fill")
+        add(4, .animal, "Cuckoo", "card.cuckoo", "bird")
+        add(4, .ribbonRed, "Ribbon", "card.ribbon", "ribbon")
+        add(4, .plain, "Wisteria", "card.wisteria", "leaf.fill")
+        add(4, .plain, "Wisteria", "card.wisteria", "leaf.fill")
 
         // 5 — Iris
-        add(5, .animal, "Bridge", "point.topleft.down.curvedto.point.bottomright.up")
-        add(5, .ribbonRed, "Ribbon", "ribbon")
-        add(5, .plain, "Iris", "leaf.fill")
-        add(5, .plain, "Iris", "leaf.fill")
+        add(5, .animal, "Bridge", "card.bridge", "point.topleft.down.curvedto.point.bottomright.up")
+        add(5, .ribbonRed, "Ribbon", "card.ribbon", "ribbon")
+        add(5, .plain, "Iris", "card.iris", "leaf.fill")
+        add(5, .plain, "Iris", "card.iris", "leaf.fill")
 
         // 6 — Peony
-        add(6, .animal, "Butterflies", "ladybug.fill")
-        add(6, .ribbonBlue, "Blue Ribbon", "ribbon")
-        add(6, .plain, "Peony", "leaf.fill")
-        add(6, .plain, "Peony", "leaf.fill")
+        add(6, .animal, "Butterflies", "card.butterflies", "ladybug.fill")
+        add(6, .ribbonBlue, "Blue Ribbon", "card.blueRibbon", "ribbon")
+        add(6, .plain, "Peony", "card.peony", "leaf.fill")
+        add(6, .plain, "Peony", "card.peony", "leaf.fill")
 
         // 7 — Bush Clover
-        add(7, .animal, "Boar", "hare.fill")
-        add(7, .ribbonRed, "Ribbon", "ribbon")
-        add(7, .plain, "Bush Clover", "leaf.fill")
-        add(7, .plain, "Bush Clover", "leaf.fill")
+        add(7, .animal, "Boar", "card.boar", "hare.fill")
+        add(7, .ribbonRed, "Ribbon", "card.ribbon", "ribbon")
+        add(7, .plain, "Bush Clover", "card.bushClover", "leaf.fill")
+        add(7, .plain, "Bush Clover", "card.bushClover", "leaf.fill")
 
         // 8 — Pampas Grass
-        add(8, .bright, "Moon", "moon.stars.fill")
-        add(8, .animal, "Geese", "bird")
-        add(8, .plain, "Pampas Grass", "leaf.fill")
-        add(8, .plain, "Pampas Grass", "leaf.fill")
+        add(8, .bright, "Moon", "card.moon", "moon.stars.fill")
+        add(8, .animal, "Geese", "card.geese", "bird")
+        add(8, .plain, "Pampas Grass", "card.pampasGrass", "leaf.fill")
+        add(8, .plain, "Pampas Grass", "card.pampasGrass", "leaf.fill")
 
         // 9 — Chrysanthemum
-        add(9, .animal, "Sake Cup", "cup.and.saucer.fill")
-        add(9, .ribbonBlue, "Blue Ribbon", "ribbon")
-        add(9, .plain, "Chrysanthemum", "leaf.fill")
-        add(9, .plain, "Chrysanthemum", "leaf.fill")
+        add(9, .animal, "Sake Cup", "card.sakeCup", "cup.and.saucer.fill")
+        add(9, .ribbonBlue, "Blue Ribbon", "card.blueRibbon", "ribbon")
+        add(9, .plain, "Chrysanthemum", "card.chrysanthemum", "leaf.fill")
+        add(9, .plain, "Chrysanthemum", "card.chrysanthemum", "leaf.fill")
 
         // 10 — Maple
-        add(10, .animal, "Deer", "hare.fill")
-        add(10, .ribbonBlue, "Blue Ribbon", "ribbon")
-        add(10, .plain, "Maple", "leaf.fill")
-        add(10, .plain, "Maple", "leaf.fill")
+        add(10, .animal, "Deer", "card.deer", "hare.fill")
+        add(10, .ribbonBlue, "Blue Ribbon", "card.blueRibbon", "ribbon")
+        add(10, .plain, "Maple", "card.maple", "leaf.fill")
+        add(10, .plain, "Maple", "card.maple", "leaf.fill")
 
         // 11 — Willow
-        add(11, .bright, "Rain Man", "umbrella.fill")
-        add(11, .animal, "Swallow", "bird")
-        add(11, .ribbonPlain, "Ribbon", "ribbon")
-        add(11, .plain, "Willow", "leaf.fill")
+        add(11, .bright, "Rain Man", "card.rainMan", "umbrella.fill")
+        add(11, .animal, "Swallow", "card.swallow", "bird")
+        add(11, .ribbonPlain, "Ribbon", "card.ribbon", "ribbon")
+        add(11, .plain, "Willow", "card.willow", "leaf.fill")
 
         // 12 — Paulownia
-        add(12, .bright, "Phoenix", "sparkles")
-        add(12, .plain, "Paulownia", "leaf.fill")
-        add(12, .plain, "Paulownia", "leaf.fill")
-        add(12, .plain, "Paulownia", "leaf.fill")
+        add(12, .bright, "Phoenix", "card.phoenix", "sparkles")
+        add(12, .plain, "Paulownia", "card.paulownia", "leaf.fill")
+        add(12, .plain, "Paulownia", "card.paulownia", "leaf.fill")
+        add(12, .plain, "Paulownia", "card.paulownia", "leaf.fill")
 
         return cards
     }()

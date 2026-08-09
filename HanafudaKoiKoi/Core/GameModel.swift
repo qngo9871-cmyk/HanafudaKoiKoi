@@ -1,6 +1,10 @@
 import Foundation
 
-enum Turn { case player, ai }
+enum Turn: Equatable { case player, ai }
+
+/// vsAI: seat `.ai` is driven by AIPlayer heuristics. twoPlayer: seat `.ai` (labelled
+/// "Player 2" in the UI) is a second human, passing the same device back and forth.
+enum GameMode { case vsAI, twoPlayer }
 
 enum TurnPhase: Equatable {
     case playFromHand
@@ -45,13 +49,26 @@ final class GameModel: ObservableObject {
     @Published var lastHandResult: String = ""
 
     var difficulty: AIDifficulty = .normal
+    var mode: GameMode = .vsAI
     private var koiKoiCalls: [Turn: Int] = [:]
     private var pendingHandCard: HanafudaCard?
 
     // MARK: - Match lifecycle
 
     func startNewMatch(difficulty: AIDifficulty) {
+        mode = .vsAI
         self.difficulty = difficulty
+        playerMatchScore = 0
+        aiMatchScore = 0
+        handNumber = 1
+        matchWinner = nil
+        dealHand()
+    }
+
+    /// Pass-and-play: seat `.ai` is a second human sharing this device — see `GameMode.twoPlayer`.
+    func startLocalTwoPlayerMatch() {
+        mode = .twoPlayer
+        difficulty = .normal
         playerMatchScore = 0
         aiMatchScore = 0
         handNumber = 1
@@ -71,46 +88,73 @@ final class GameModel: ObservableObject {
         lastCaptured = []
         koiKoiCalls = [:]
         currentTurn = handNumber % 2 == 1 ? .player : .ai
-        turnPhase = currentTurn == .player ? .playFromHand : .aiThinking
-        message = currentTurn == .player ? "Your move — pick a card." : "Opponent's move..."
-        if currentTurn == .ai { runAITurn() }
+        turnPhase = .playFromHand
+        message = currentTurnMovePrompt()
+        if currentTurn == .ai && mode == .vsAI {
+            turnPhase = .aiThinking
+            runAITurn()
+        }
     }
 
-    // MARK: - Player: hand card
-
-    func playerSelectHand(_ card: HanafudaCard) {
-        guard currentTurn == .player, turnPhase == .playFromHand, playerHand.contains(card) else { return }
-        playerHand.removeAll { $0.id == card.id }
-        resolvePlacement(of: card, isHandCard: true, for: .player)
+    private func currentTurnMovePrompt() -> String {
+        if currentTurn == .player { return L("game.yourMove") }
+        return mode == .twoPlayer ? L("game.player2Move") : L("game.opponentMove")
     }
+
+    // MARK: - Hand card selection (works for whichever seat is currently human-controlled:
+    // `.player` always, and `.ai` too in local two-player mode)
+
+    func selectFromHand(_ card: HanafudaCard) {
+        guard turnPhase == .playFromHand else { return }
+        if currentTurn == .player {
+            guard playerHand.contains(card) else { return }
+            playerHand.removeAll { $0.id == card.id }
+            resolvePlacement(of: card, isHandCard: true, for: .player)
+        } else if mode == .twoPlayer {
+            guard aiHand.contains(card) else { return }
+            aiHand.removeAll { $0.id == card.id }
+            resolvePlacement(of: card, isHandCard: true, for: .ai)
+        }
+    }
+
+    /// Legacy name, kept for the vsAI player-hand call sites.
+    func playerSelectHand(_ card: HanafudaCard) { selectFromHand(card) }
 
     func playerChooseCapture(_ target: HanafudaCard) {
         guard case .chooseCaptureForHand(let matches) = turnPhase, matches.contains(target),
               let card = pendingHandCard else { return }
         pendingHandCard = nil
-        capture(card: card, target: target, for: .player)
-        drawAndMatch(for: .player)
+        let seat = currentTurn
+        capture(card: card, target: target, for: seat)
+        drawAndMatch(for: seat)
     }
 
     func playerChooseDrawCapture(_ target: HanafudaCard) {
         guard case .chooseCaptureForDraw(let drawn, let matches) = turnPhase, matches.contains(target) else { return }
-        capture(card: drawn, target: target, for: .player)
-        finishCaptureStep(for: .player)
+        let seat = currentTurn
+        capture(card: drawn, target: target, for: seat)
+        finishCaptureStep(for: seat)
     }
 
-    // MARK: - Koi-koi decision (player)
+    // MARK: - Koi-koi decision (whichever seat is currently prompted — always `.player`
+    // in vsAI mode; either seat in local two-player mode)
 
-    func playerCallsKoiKoi() {
+    func callsKoiKoi() {
         guard case .koiKoiPrompt = turnPhase else { return }
-        koiKoiCalls[.player, default: 0] += 1
-        message = "Koi-Koi! Keep going."
+        koiKoiCalls[currentTurn, default: 0] += 1
+        message = L("game.koiKoiKeepGoing")
         endTurn()
     }
 
-    func playerCallsShoubu() {
+    func callsShoubu() {
         guard case .koiKoiPrompt(_, let points) = turnPhase else { return }
-        settleHand(winner: .player, points: points)
+        settleHand(winner: currentTurn, points: points)
     }
+
+    /// Legacy names, kept for the vsAI call sites (identical behavior — koi-koi/shoubu
+    /// are only ever prompted to `.player` in vsAI mode anyway).
+    func playerCallsKoiKoi() { callsKoiKoi() }
+    func playerCallsShoubu() { callsShoubu() }
 
     // MARK: - Core resolution
 
@@ -141,8 +185,10 @@ final class GameModel: ObservableObject {
             return
         }
 
-        // 2+ possible targets — needs a decision.
-        if player == .player {
+        // 2+ possible targets — needs a decision. In vsAI mode only `.player` is human;
+        // in local two-player mode both seats are human.
+        let isHumanSeat = player == .player || mode == .twoPlayer
+        if isHumanSeat {
             if isHandCard {
                 pendingHandCard = card
                 turnPhase = .chooseCaptureForHand(matches)
@@ -189,9 +235,11 @@ final class GameModel: ObservableObject {
 
         if total > 0 && (!alreadyDeclaredThisHand || total > lastDeclaredPoints(for: player)) {
             recordDeclaredPoints(total, for: player)
-            if player == .player {
+            if player == .player || mode == .twoPlayer {
                 turnPhase = .koiKoiPrompt(newYaku: yaku, totalPoints: total)
-                message = "You scored \(yaku.map(\.name).joined(separator: ", "))! Koi-Koi or stop?"
+                let yakuNames = yaku.map(\.name).joined(separator: ", ")
+                let scoredKey = player == .player ? "game.youScored" : "game.player2Scored"
+                message = String(format: L(scoredKey), yakuNames)
             } else {
                 let keepGoing = AIPlayer.decideKoiKoi(currentPoints: total, captured: aiCaptured,
                                                        remainingHandCount: aiHand.count,
@@ -199,7 +247,7 @@ final class GameModel: ObservableObject {
                                                        difficulty: difficulty)
                 if keepGoing {
                     koiKoiCalls[.ai, default: 0] += 1
-                    message = "Opponent calls Koi-Koi!"
+                    message = L("game.opponentKoiKoi")
                     endTurn()
                 } else {
                     settleHand(winner: .ai, points: total)
@@ -231,17 +279,18 @@ final class GameModel: ObservableObject {
             return
         }
         currentTurn = currentTurn == .player ? .ai : .player
-        if currentTurn == .ai {
+        if currentTurn == .ai && mode == .vsAI {
             turnPhase = .aiThinking
-            message = "Opponent's move..."
+            message = L("game.opponentMove")
             runAITurn()
         } else {
             turnPhase = .playFromHand
-            message = "Your move — pick a card."
+            message = currentTurnMovePrompt()
         }
     }
 
     private func runAITurn() {
+        guard mode == .vsAI else { return }
         guard !aiHand.isEmpty else { endTurn(); return }
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.7) { [weak self] in
             guard let self, self.currentTurn == .ai else { return }
@@ -255,15 +304,22 @@ final class GameModel: ObservableObject {
     private func settleHand(winner: Turn?, points: Int) {
         var finalPoints = points
         if let winner {
-            let calls = koiKoiCalls[winner, default: 0]
+            // Standard rule: the score doubles for EVERY koi-koi call made during the hand,
+            // by either player — not just calls made by the eventual winner. Calling koi-koi
+            // is a gamble that raises the stakes for whoever ends up winning the hand, even
+            // if that turns out to be the opponent (e.g. AI calls koi-koi hoping for a bigger
+            // yaku, player then completes a yaku first and stops — player's win is still
+            // doubled by the AI's earlier koi-koi call).
+            let calls = koiKoiCalls[.player, default: 0] + koiKoiCalls[.ai, default: 0]
             if calls > 0 { finalPoints = points * Int(pow(2.0, Double(calls))) }
             if winner == .player { playerMatchScore += finalPoints }
             else { aiMatchScore += finalPoints }
-            lastHandResult = winner == .player
-                ? "You won the hand — +\(finalPoints) points"
-                : "Opponent won the hand — +\(finalPoints) points"
+            let key: String
+            if winner == .player { key = "game.youWonHand" }
+            else { key = mode == .twoPlayer ? "game.player2WonHand" : "game.opponentWonHand" }
+            lastHandResult = String(format: L(key), finalPoints)
         } else {
-            lastHandResult = "Hand ended in a draw — no points."
+            lastHandResult = L("game.handDraw")
         }
 
         playerDeclaredOnce = false; aiDeclaredOnce = false
@@ -307,7 +363,7 @@ extension GameModel {
 
         currentTurn = .player
         lastCaptured = Array(playerCaptured.suffix(2))
-        message = "Your move — pick a card."
+        message = L("game.yourMove")
 
         switch name {
         case "yaku":

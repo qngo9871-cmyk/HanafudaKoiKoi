@@ -1,0 +1,163 @@
+/* Home */
+"home.title" = "Koi-Koi";
+"home.subtitle" = "Hanafuda · Go-Stop · Hwatu";
+"home.play.easy" = "Play — Easy";
+"home.play.normal" = "Play — Normal";
+"home.play.hard" = "Play — Hard";
+"home.twoPlayer" = "Local Two-Player";
+"home.howToPlay" = "How to Play";
+"home.yakuGuide" = "Yaku Guide";
+"home.upgradeTeaser" = "Unlock Pro — Hard AI, Local 2-Player & Card Backs";
+
+/* Onboarding */
+"onboarding.page1.title" = "Match to Capture";
+"onboarding.page1.body" = "Play a card from your hand onto a field card from the same month to capture both. No match? Your card stays on the field for later.";
+"onboarding.page2.title" = "Collect Yaku";
+"onboarding.page2.body" = "Capture sets of brights, animals, ribbons, and plain cards to complete scoring combinations called yaku.";
+"onboarding.seeYakuGuide" = "See the full Yaku Guide →";
+"onboarding.page3.title" = "Koi-Koi or Stop";
+"onboarding.page3.body" = "The moment you complete a yaku, choose: call \"Koi-Koi\" to keep playing for more points, or \"Stop\" to bank what you've got — before your opponent catches up.";
+"onboarding.page4.title" = "Play the AI — or a Friend";
+"onboarding.page4.body" = "Pick Easy, Normal, or Hard against the AI, or pass the device back and forth in Local Two-Player.";
+"onboarding.next" = "Next";
+"onboarding.letsPlay" = "Let's Play";
+
+/* Yaku Guide */
+"yakuguide.title" = "Yaku Guide";
+"yakuguide.intro" = "Every scoring combination in Koi-Koi, with its point value. Combine several in one hand for a bigger score.";
+"yakuguide.pts" = "pts";
+"yakuguide.done" = "Done";
+
+/* Yaku names */
+"yaku.fiveBrights" = "Five Brights";
+"yaku.fourBrights" = "Four Brights";
+"yaku.rainyFourBrights" = "Rainy Four Brights";
+"yaku.threeBrights" = "Three Brights";
+"yaku.animals" = "Animals";
+"yaku.boarDeerButterfly" = "Boar-Deer-Butterfly";
+"yaku.ribbons" = "Ribbons";
+"yaku.poetryRibbons" = "Poetry Ribbons (Akatan)";
+"yaku.blueRibbons" = "Blue Ribbons (Aotan)";
+"yaku.poetryBlueCombo" = "Poetry + Blue Combo";
+"yaku.chaff" = "Chaff";
+"yaku.moonViewing" = "Moon Viewing";
+"yaku.flowerViewing" = "Flower Viewing";
+
+/* Yaku descriptions */
+"yaku.fiveBrights.desc" = "Capture all 5 bright cards: Crane, Curtain, Moon, Rain Man, and Phoenix.";
+"yaku.fourBrights.desc" = "Capture any 4 bright cards, not including Rain Man.";
+"yaku.rainyFourBrights.desc" = "Capture 4 bright cards including Rain Man — worth slightly less than a clean Four Brights.";
+"yaku.threeBrights.desc" = "Capture any 3 bright cards, not including Rain Man.";
+"yaku.animals.desc" = "Capture 5 or more animal cards. Each card beyond 5 adds another point.";
+"yaku.boarDeerButterfly.desc" = "Capture the Boar, Deer, and Butterflies animal cards together.";
+"yaku.ribbons.desc" = "Capture 5 or more ribbon cards of any color. Each card beyond 5 adds another point.";
+"yaku.poetryRibbons.desc" = "Capture all 3 red poetry ribbons (January, February, March).";
+"yaku.blueRibbons.desc" = "Capture all 3 blue ribbons (June, September, October).";
+"yaku.poetryBlueCombo.desc" = "Capture both full ribbon sets above in the same hand for a large bonus.";
+"yaku.chaff.desc" = "Capture 10 or more plain (chaff) cards. Each card beyond 10 adds another point.";
+"yaku.moonViewing.desc" = "Capture the Moon (August bright) together with the Sake Cup (September animal).";
+"yaku.flowerViewing.desc" = "Capture the Curtain (March bright) together with the Sake Cup (September animal).";
+
+/* Upgrade / Pro */
+"upgrade.title" = "Koi-Koi Pro";
+"upgrade.featureHardAI" = "Hard AI opponent";
+"upgrade.featureTwoPlayer" = "Local two-player mode";
+"upgrade.featureCardBacks" = "Alternate card back designs";
+"upgrade.featureNoAds" = "Unlimited matches, no ads ever";
+"upgrade.cardBackPicker" = "Choose Your Card Back";
+"upgrade.unlock" = "Unlock — %@";
+"upgrade.purchasing" = "Purchasing...";
+"upgrade.storeUnavailable" = "Store unavailable right now.";
+"upgrade.restorePurchases" = "Restore Purchases";
+"upgrade.notNow" = "Not now";
+"upgrade.done" = "Done";
+
+/* Purchase errors */
+"purchase.errorNotAvailable" = "Product not available. Please try again.";
+"purchase.errorPending" = "Purchase is pending approval.";
+"purchase.errorUnexpected" = "An unexpected error occurred.";
+"purchase.errorRestore" = "Could not restore purchases. Please try again.";
+"purchase.errorNoRestore" = "No purchase found to restore.";
+
+/* Card back styles */
+"cardback.ink" = "Ink Leaf";
+"cardback.sakura" = "Sakura";
+
+/* Card kind labels (shown on the card face) */
+"cardkind.bright" = "BRIGHT";
+"cardkind.animal" = "ANIMAL";
+"cardkind.poetry" = "POETRY";
+"cardkind.ribbon" = "RIBBON";
+
+/* Card names */
+"card.crane" = "Crane";
+"card.poetryRibbon" = "Poetry Ribbon";
+"card.pine" = "Pine";
+"card.bushWarbler" = "Bush Warbler";
+"card.plumBlossom" = "Plum Blossom";
+"card.curtain" = "Curtain";
+"card.cherryBlossom" = "Cherry Blossom";
+"card.cuckoo" = "Cuckoo";
+"card.ribbon" = "Ribbon";
+"card.wisteria" = "Wisteria";
+"card.bridge" = "Bridge";
+"card.iris" = "Iris";
+"card.butterflies" = "Butterflies";
+"card.blueRibbon" = "Blue Ribbon";
+"card.peony" = "Peony";
+"card.boar" = "Boar";
+"card.bushClover" = "Bush Clover";
+"card.moon" = "Moon";
+"card.geese" = "Geese";
+"card.pampasGrass" = "Pampas Grass";
+"card.sakeCup" = "Sake Cup";
+"card.chrysanthemum" = "Chrysanthemum";
+"card.deer" = "Deer";
+"card.maple" = "Maple";
+"card.rainMan" = "Rain Man";
+"card.swallow" = "Swallow";
+"card.willow" = "Willow";
+"card.phoenix" = "Phoenix";
+"card.paulownia" = "Paulownia";
+
+/* Game — labels */
+"game.opponentLabel" = "Opponent";
+"game.youLabel" = "You";
+"game.player1" = "Player 1";
+"game.player2" = "Player 2";
+"game.handLabel" = "Hand %d/%d";
+"game.quit" = "Quit";
+"game.opponentCaptured" = "Opponent captured";
+"game.yourCaptures" = "Your captures";
+"game.player1Captured" = "Player 1 captured";
+"game.player2Captured" = "Player 2 captured";
+
+/* Game — turn messages */
+"game.yourMove" = "Your move — pick a card.";
+"game.opponentMove" = "Opponent's move...";
+"game.player2Move" = "Player 2's move — pick a card.";
+"game.koiKoiKeepGoing" = "Koi-Koi! Keep going.";
+"game.opponentKoiKoi" = "Opponent calls Koi-Koi!";
+"game.youScored" = "You scored %@! Koi-Koi or stop?";
+"game.player2Scored" = "Player 2 scored %@! Koi-Koi or stop?";
+"game.handDraw" = "Hand ended in a draw — no points.";
+"game.youWonHand" = "You won the hand — +%d points";
+"game.opponentWonHand" = "Opponent won the hand — +%d points";
+"game.player2WonHand" = "Player 2 won the hand — +%d points";
+
+/* Game — overlays */
+"game.chooseMatch" = "Choose a match";
+"game.yaku" = "Yaku!";
+"game.total" = "Total: %d pts";
+"game.koiKoiButton" = "Koi-Koi\n(keep going)";
+"game.shoubuButton" = "Shoubu\n(bank it)";
+"game.nextHand" = "Next Hand";
+"game.backToMenu" = "Back to Menu";
+"game.youWinMatch" = "You win the match!";
+"game.opponentWinsMatch" = "Opponent wins the match.";
+"game.playerWinsMatch" = "%@ wins the match!";
+"game.matchTied" = "Match tied.";
+
+/* Game — local two-player pass screen */
+"game.passToPlayer" = "Pass the device to %@";
+"game.readyReveal" = "I'm ready — reveal my hand";

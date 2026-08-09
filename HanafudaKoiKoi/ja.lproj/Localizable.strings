@@ -1,0 +1,163 @@
+/* Home */
+"home.title" = "こいこい";
+"home.subtitle" = "花札で遊ぶ定番の対戦ゲーム";
+"home.play.easy" = "プレイ — かんたん";
+"home.play.normal" = "プレイ — ふつう";
+"home.play.hard" = "プレイ — むずかしい";
+"home.twoPlayer" = "ローカル2人対戦";
+"home.howToPlay" = "遊び方";
+"home.yakuGuide" = "役一覧";
+"home.upgradeTeaser" = "Pro版で解放 — むずかしいAI・2人対戦・裏面デザイン";
+
+/* Onboarding */
+"onboarding.page1.title" = "月が合えば札を取る";
+"onboarding.page1.body" = "手札を場の同じ月の札に合わせて出すと、両方の札を取れます。合う札がなければ、そのまま場に残ります。";
+"onboarding.page2.title" = "役をそろえよう";
+"onboarding.page2.body" = "光札・タネ・短冊・カスなどの組み合わせをそろえると「役」が成立し、得点になります。";
+"onboarding.seeYakuGuide" = "役一覧をすべて見る →";
+"onboarding.page3.title" = "こいこい、それとも勝負";
+"onboarding.page3.body" = "役が成立したその瞬間に選択：「こいこい」と宣言してさらに高得点を狙うか、「勝負」で今の得点を確定させるか。相手に追いつかれる前に見極めよう。";
+"onboarding.page4.title" = "AIと、または友達と";
+"onboarding.page4.body" = "かんたん・ふつう・むずかしいのAIと対戦するか、端末を渡し合ってローカル2人対戦を楽しめます。";
+"onboarding.next" = "次へ";
+"onboarding.letsPlay" = "プレイ開始";
+
+/* Yaku Guide */
+"yakuguide.title" = "役一覧";
+"yakuguide.intro" = "こいこいのすべての役と得点です。一度の手で複数の役を重ねると、さらに高得点になります。";
+"yakuguide.pts" = "点";
+"yakuguide.done" = "閉じる";
+
+/* Yaku names */
+"yaku.fiveBrights" = "五光";
+"yaku.fourBrights" = "四光";
+"yaku.rainyFourBrights" = "雨四光";
+"yaku.threeBrights" = "三光";
+"yaku.animals" = "タネ";
+"yaku.boarDeerButterfly" = "猪鹿蝶";
+"yaku.ribbons" = "短冊";
+"yaku.poetryRibbons" = "赤短";
+"yaku.blueRibbons" = "青短";
+"yaku.poetryBlueCombo" = "赤短・青短";
+"yaku.chaff" = "カス";
+"yaku.moonViewing" = "月見酒";
+"yaku.flowerViewing" = "花見酒";
+
+/* Yaku descriptions */
+"yaku.fiveBrights.desc" = "光札5枚（鶴・幕・月・雨入道・鳳凰）をすべて取る。";
+"yaku.fourBrights.desc" = "雨入道を除く光札4枚を取る。";
+"yaku.rainyFourBrights.desc" = "雨入道を含む光札4枚を取る。通常の四光よりやや低い得点。";
+"yaku.threeBrights.desc" = "雨入道を除く光札3枚を取る。";
+"yaku.animals.desc" = "タネ札を5枚以上取る。5枚を超えるごとに1点追加。";
+"yaku.boarDeerButterfly.desc" = "猪・鹿・蝶のタネ札をすべて取る。";
+"yaku.ribbons.desc" = "短冊札を色を問わず5枚以上取る。5枚を超えるごとに1点追加。";
+"yaku.poetryRibbons.desc" = "赤い短冊（松・梅・桜）を3枚すべて取る。";
+"yaku.blueRibbons.desc" = "青い短冊（牡丹・菊・紅葉）を3枚すべて取る。";
+"yaku.poetryBlueCombo.desc" = "同じ手で赤短と青短の両方をそろえると、さらに大きなボーナス。";
+"yaku.chaff.desc" = "カス札を10枚以上取る。10枚を超えるごとに1点追加。";
+"yaku.moonViewing.desc" = "月（芒の光札）と盃（菊のタネ札）を同時に取る。";
+"yaku.flowerViewing.desc" = "幕（桜の光札）と盃（菊のタネ札）を同時に取る。";
+
+/* Upgrade / Pro */
+"upgrade.title" = "こいこい Pro";
+"upgrade.featureHardAI" = "むずかしいAI対戦";
+"upgrade.featureTwoPlayer" = "ローカル2人対戦モード";
+"upgrade.featureCardBacks" = "札の裏面デザイン変更";
+"upgrade.featureNoAds" = "対戦回数無制限・広告なし";
+"upgrade.cardBackPicker" = "裏面デザインを選ぶ";
+"upgrade.unlock" = "購入 — %@";
+"upgrade.purchasing" = "購入処理中...";
+"upgrade.storeUnavailable" = "現在ストアを利用できません。";
+"upgrade.restorePurchases" = "購入を復元";
+"upgrade.notNow" = "あとで";
+"upgrade.done" = "閉じる";
+
+/* Purchase errors */
+"purchase.errorNotAvailable" = "商品を取得できませんでした。もう一度お試しください。";
+"purchase.errorPending" = "購入は承認待ちです。";
+"purchase.errorUnexpected" = "予期しないエラーが発生しました。";
+"purchase.errorRestore" = "購入を復元できませんでした。もう一度お試しください。";
+"purchase.errorNoRestore" = "復元できる購入が見つかりませんでした。";
+
+/* Card back styles */
+"cardback.ink" = "墨葉";
+"cardback.sakura" = "桜";
+
+/* Card kind labels (shown on the card face) */
+"cardkind.bright" = "光";
+"cardkind.animal" = "タネ";
+"cardkind.poetry" = "短冊";
+"cardkind.ribbon" = "短冊";
+
+/* Card names */
+"card.crane" = "鶴";
+"card.poetryRibbon" = "短冊";
+"card.pine" = "松";
+"card.bushWarbler" = "鶯";
+"card.plumBlossom" = "梅";
+"card.curtain" = "幕";
+"card.cherryBlossom" = "桜";
+"card.cuckoo" = "ホトトギス";
+"card.ribbon" = "短冊";
+"card.wisteria" = "藤";
+"card.bridge" = "八橋";
+"card.iris" = "菖蒲";
+"card.butterflies" = "蝶";
+"card.blueRibbon" = "青短";
+"card.peony" = "牡丹";
+"card.boar" = "猪";
+"card.bushClover" = "萩";
+"card.moon" = "月";
+"card.geese" = "雁";
+"card.pampasGrass" = "芒";
+"card.sakeCup" = "盃";
+"card.chrysanthemum" = "菊";
+"card.deer" = "鹿";
+"card.maple" = "紅葉";
+"card.rainMan" = "雨入道";
+"card.swallow" = "燕";
+"card.willow" = "柳";
+"card.phoenix" = "鳳凰";
+"card.paulownia" = "桐";
+
+/* Game — labels */
+"game.opponentLabel" = "相手";
+"game.youLabel" = "あなた";
+"game.player1" = "プレイヤー1";
+"game.player2" = "プレイヤー2";
+"game.handLabel" = "%d/%d 局";
+"game.quit" = "やめる";
+"game.opponentCaptured" = "相手の獲得札";
+"game.yourCaptures" = "あなたの獲得札";
+"game.player1Captured" = "プレイヤー1の獲得札";
+"game.player2Captured" = "プレイヤー2の獲得札";
+
+/* Game — turn messages */
+"game.yourMove" = "あなたの番です — 札を選んでください。";
+"game.opponentMove" = "相手の番です…";
+"game.player2Move" = "プレイヤー2の番です — 札を選んでください。";
+"game.koiKoiKeepGoing" = "こいこい！続行します。";
+"game.opponentKoiKoi" = "相手が「こいこい」を宣言！";
+"game.youScored" = "%@ が成立！こいこい、それとも勝負？";
+"game.player2Scored" = "プレイヤー2が %@ を成立！こいこい、それとも勝負？";
+"game.handDraw" = "この局は引き分けです — 得点なし。";
+"game.youWonHand" = "この局はあなたの勝ち — +%d点";
+"game.opponentWonHand" = "この局は相手の勝ち — +%d点";
+"game.player2WonHand" = "この局はプレイヤー2の勝ち — +%d点";
+
+/* Game — overlays */
+"game.chooseMatch" = "取る札を選んでください";
+"game.yaku" = "役成立！";
+"game.total" = "合計: %d点";
+"game.koiKoiButton" = "こいこい\n(続行)";
+"game.shoubuButton" = "勝負\n(確定)";
+"game.nextHand" = "次の局へ";
+"game.backToMenu" = "メニューに戻る";
+"game.youWinMatch" = "あなたの勝利です！";
+"game.opponentWinsMatch" = "相手の勝利です。";
+"game.playerWinsMatch" = "%@ の勝利です！";
+"game.matchTied" = "引き分けです。";
+
+/* Game — local two-player pass screen */
+"game.passToPlayer" = "%@ に端末を渡してください";
+"game.readyReveal" = "準備完了 — 手札を表示";

@@ -8,12 +8,16 @@ struct OnboardingView: View {
 
     @State private var page = 0
 
-    private let pages: [(title: String, body: String)] = [
-        ("Match to Capture", "Play a card from your hand onto a field card from the same month to capture both. No match? Your card stays on the field for later."),
-        ("Collect Yaku", "Capture sets of brights, animals, ribbons, and plain cards to complete scoring combinations called yaku."),
-        ("Koi-Koi or Stop", "The moment you complete a yaku, choose: call \"Koi-Koi\" to keep playing for more points, or \"Stop\" to bank what you've got — before your opponent catches up."),
-        ("Play the AI", "Pick Easy, Normal, or Hard and see how far your hand can go."),
-    ]
+    var onOpenYakuGuide: (() -> Void)? = nil
+
+    private var pages: [(title: String, body: String)] {
+        [
+            (L("onboarding.page1.title"), L("onboarding.page1.body")),
+            (L("onboarding.page2.title"), L("onboarding.page2.body")),
+            (L("onboarding.page3.title"), L("onboarding.page3.body")),
+            (L("onboarding.page4.title"), L("onboarding.page4.body")),
+        ]
+    }
 
     var body: some View {
         ZStack {
@@ -39,6 +43,14 @@ struct OnboardingView: View {
                     .multilineTextAlignment(.center)
                     .padding(.horizontal, 36)
 
+                if page == 1, let onOpenYakuGuide {
+                    Button(action: onOpenYakuGuide) {
+                        Text(L("onboarding.seeYakuGuide"))
+                            .font(.system(size: 14, weight: .semibold))
+                            .foregroundStyle(.yellow)
+                    }
+                }
+
                 HStack(spacing: 8) {
                     ForEach(pages.indices, id: \.self) { i in
                         Circle()
@@ -50,7 +62,7 @@ struct OnboardingView: View {
                 Spacer()
 
                 Button(action: advance) {
-                    Text(page == pages.count - 1 ? "Let's Play" : "Next")
+                    Text(page == pages.count - 1 ? L("onboarding.letsPlay") : L("onboarding.next"))
                         .font(.system(size: 17, weight: .semibold, design: .rounded))
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 4)
