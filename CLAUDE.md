@@ -398,6 +398,24 @@ including after removing the temporary UI-test target.
 standing 2026-08-18+ staggered-resubmission plan. This app resubmits 2026-09-06 (batch 7, with
 Ô Ăn Quan and Mythsmith).
 
+## Build staged for resubmission (2026-08-13)
+
+Archived, exported, and uploaded a Release build ahead of the staggered resubmission — still
+blocked until 2026-08-18 by the Guideline 5.6 account-level hold, this app resubmits
+**2026-09-06** (batch 7). Build **1.1.1 (6)** uploaded via
+`xcrun altool --upload-app` (Delivery UUID `46031850-be74-4afa-a30a-4fa79159b712`), processed to `VALID` by Apple, and
+attached to the existing `REJECTED` appStoreVersion (id `76783f43-3198-408c-b867-955d8b34567f`) via a direct
+`PATCH appStoreVersions/{id}/relationships/build` API call — independently re-verified via a
+follow-up `GET` on the same relationship, not just trusted from the PATCH's 204 response.
+**Version-mismatch bug caught and fixed before this build was made.** `project.yml` had two settings blocks (top-level `settings.base` and a `targets.HanafudaKoiKoi.settings.base` override) — an earlier polish-pass commit's version bump had only updated the top-level block (to 1.1.1/6) while the target-level override, which wins at build time, was still 1.1.0/5. The first archive attempt would have silently shipped 1.1.0 (5) despite the polish-pass notes claiming 1.1.1 (6). Caught by unzipping the IPA and checking `CFBundleShortVersionString` directly rather than trusting the build log; fixed the target-level block and re-archived/re-exported/re-uploaded — the build referenced above is the corrected one, independently confirmed as 1.1.1 (6) inside the actual IPA.
+
+**Deliberately NOT done yet** — waiting for the user's explicit go-ahead on this app's
+scheduled date, per the staggered resubmission plan:
+1. Tick the Pro IAP into this version in the App Store Connect **web UI** — the API has no
+   way to do this; it must be done from the version's own page (not the IAP's own page, which
+   creates an orphaned draft submission — a mistake this portfolio hit once before).
+2. Submit for review.
+
 ## Instructions for Claude Code
 At the end of every session, update the Current State section to reflect progress made.
 
