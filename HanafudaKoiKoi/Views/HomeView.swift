@@ -112,14 +112,17 @@ struct HomeView: View {
                             }
                         }
 
-                        if !purchases.isPro {
-                            Button { showUpgrade = true } label: {
-                                Text(L("home.upgradeTeaser"))
-                                    .font(.system(size: 13, weight: .semibold))
-                                    .foregroundStyle(.yellow)
-                                    .multilineTextAlignment(.center)
-                                    .padding(.horizontal, 30)
-                            }
+                        // Always reachable, Pro or not — this is the only live path to the
+                        // card-back picker once purchased, since the difficulty/two-player
+                        // buttons above route straight into gameplay for a Pro user instead
+                        // of opening this sheet. Without this, a paying customer would have
+                        // no way to revisit their card-back choice after the first purchase.
+                        Button { showUpgrade = true } label: {
+                            Text(purchases.isPro ? L("home.cardBackSettings") : L("home.upgradeTeaser"))
+                                .font(.system(size: 13, weight: .semibold))
+                                .foregroundStyle(.yellow)
+                                .multilineTextAlignment(.center)
+                                .padding(.horizontal, 30)
                         }
 
                         Picker("", selection: $loc.language) {

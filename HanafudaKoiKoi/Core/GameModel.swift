@@ -343,12 +343,13 @@ final class GameModel: ObservableObject {
 // MARK: - Screenshot capture helpers (DEBUG only; launch args never set in production)
 extension GameModel {
 
-    /// Entry point. name: table | yaku | matchover
+    /// Entry point. name: table | yaku | matchover | twoplayer
     func captureSetup(_ name: String) {
         difficulty = .normal
         playerMatchScore = 4
         aiMatchScore = 2
         handNumber = 2
+        mode = name == "twoplayer" ? .twoPlayer : .vsAI
 
         var shuffled = HanafudaDeck.fullDeck.shuffled()
         playerHand = Array(shuffled.prefix(6)); shuffled.removeFirst(6)
@@ -363,7 +364,7 @@ extension GameModel {
 
         currentTurn = .player
         lastCaptured = Array(playerCaptured.suffix(2))
-        message = L("game.yourMove")
+        message = currentTurnMovePrompt()
 
         switch name {
         case "yaku":

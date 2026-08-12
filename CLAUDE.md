@@ -267,6 +267,137 @@ WAITING_FOR_REVIEW. **Do not touch App Store Connect or resubmit before 2026-08-
   - Card-back designs are palette-only (no new art/texture) — fine for now, same
     "revisit if conversion data justifies it" note as sibling apps.
 
+## Polish pass (2026-08-12)
+
+Second, deeper pre-resubmission pass (batch 7, resubmits 2026-09-06) — this app carried the
+highest risk in the whole 18-app wave since the 08-09 pass had found and fixed **sold-but-
+never-built Pro features** (real purchasers may have paid for a 2-player mode and card backs
+that didn't exist). Job this pass was to independently re-verify, with real interactive
+evidence, that all four 08-09 fixes are genuinely solid — not just re-read the code.
+
+**Verification method:** no idb/XCUITest tooling and no working GUI automation were available
+in this environment (`osascript`/System Events hit an AppleEvent timeout — Accessibility
+permission isn't granted here; `screencapture` also returned a black frame — Screen Recording
+isn't granted either). Built a temporary XCUITest UI-test target instead (removed after use,
+not committed) to drive real taps into the Simulator and capture screenshots as evidence —
+this is the only way to get genuine tap-through verification, not just code review, in this
+environment.
+
+**(a) Local two-player pass-and-play — CONFIRMED GENUINELY WORKING.** Ran a real 2P match via
+XCUITest: tapped "Local Two-Player" on Home, hit the "Pass the device to Player 1" gate, tapped
+"I'm ready", played a real card as Player 1, confirmed the turn correctly flipped — a *second*
+pass gate appeared ("Pass the device to Player 2"), and Player 2's hand became the active
+face-up/tappable hand while Player 1's flipped face-down. This is real `GameModel.currentTurn`
+alternation exercised through actual taps, not a static demo screen.
+
+**(b) Alternate card backs — CONFIRMED GENUINELY WORKING, but found and fixed one real gap.**
+As Pro, selected Sakura in the picker, started a live vsAI match, and confirmed the opponent's
+face-down hand rendered the Sakura gradient/icon in the real game table (not just the picker
+swatch). As free user (fresh Release build — DEBUG always forces `isPro=true`, so this had to
+be a genuine Release-config install to test honestly), confirmed Play—Hard and Local Two-Player
+both show lock icons and gate to the paywall. **Real bug found:** once `isPro` was true, there
+was **no live path back into `UpgradeView`** — both Home entry points that used to open it
+(`Hard AI`, `Local Two-Player`) route straight into gameplay once Pro, and the "Unlock Pro"
+teaser button was wrapped in `if !purchases.isPro`. A paying customer could pick a card back
+once, right after purchasing, but could never revisit the picker again after dismissing that
+sheet. **Fixed:** `HomeView`'s teaser button is now always shown, unconditionally opening
+`UpgradeView`, with its label swapping to "Card Back Style" once Pro (`home.cardBackSettings`,
+added to both `.lproj` files).
+
+**(c) Localization — found and fixed a real, serious bug: live language switch was broken.**
+Diffed `en.lproj`/`ja.lproj` key sets — still identical (164 keys each after this pass's
+addition). But a live, mid-session XCUITest language switch (tap the 日本語 segment, no
+relaunch) proved the UI **did not re-render** — waited 6s, screenshotted every second, still
+showed English text, even though the segmented control's selection visibly toggled. Root
+cause: `LocalizationManager.language`'s `didSet` only persisted the raw value to
+`UserDefaults` — it never called `setLanguage(_:)`, the only method that swaps the internal
+`bundle` used by `string(_:)`. The Home segmented Picker binds directly to `$loc.language`,
+bypassing `setLanguage(_:)` entirely, so the picker toggled and persisted correctly (which is
+why a *cold relaunch* showed the right language — the only verification the 08-09 pass had
+done) but never actually re-rendered live. Same bug class already found in Ô Ăn
+Quan/Tử Vi/Dara this session, just not yet caught here. **Fixed:** moved the bundle-swap into
+`language`'s own `didSet`, so every mutation path stays consistent. Re-ran the same live-switch
+test after the fix — Japanese text now renders within ~1 second of tapping, confirmed via
+screenshot, no tofu boxes/mojibake.
+
+**(d) Scoring — re-verified correct, no issues found.** Re-read `YakuScorer.swift` against the
+documented point table in this file's Key Decisions — brights/animals/ribbons/chaff/moon-
+viewing/flower-viewing all match, including the 3-bright rain-man exclusion and 4-bright
+Shikou/Ame-Shikou split. Re-read `GameModel.settleHand()`'s koi-koi doubling fix — correctly
+sums `koiKoiCalls[.player] + koiKoiCalls[.ai]` (both seats, not just the winner) and doubles by
+`2^calls`, matching the standard rule and the 08-09 fix description. No regression.
+
+**⚠️ Standing concern, not resolved this pass (out of scope per the task):** real Pro
+purchasers before the 08-09 fix may have paid for a 2-player mode and card backs that didn't
+exist yet. That business/refund question has not been raised with the user as of this pass —
+flagging again here since it's the one open item this polish pass could not close.
+
+**Screenshots — found and fixed real staleness.** The shipped screenshots (both locales) dated
+from 2026-07-26, before *any* of the 08-09 work — no Local Two-Player button, no Card Back
+Style/Yaku Guide links, no language picker, and obviously no 2P or card-back screens. Also
+found the `ja` set was never real Japanese UI to begin with — `capture_shots_ja.py` only
+overlaid a translated caption band on the *English* in-app UI, stale since the app became
+genuinely bilingual. Recaptured both locales for real on a dedicated `HanafudaKoiKoi-Capture`
+simulator (this batch runs 3 apps' capture scripts concurrently — a shared/default simulator
+risks cross-app contamination): 6 screenshots per locale now (was 4), adding a real pass-and-
+play screen and a real card-back-picker screen, ja captured with `HK_LANG=ja` for genuine
+Japanese in-app UI. Also fixed three capture-script bugs found along the way:
+`capture_shots.py`/`_ja.py` hardcoded `APP_DIR`/`REPO` to `/Users/user/HanafudaKoiKoi`, a path
+that doesn't exist on this machine; the "home" capture scenario had no `HK_SKIP_ONBOARDING`
+override, so on a fresh simulator it captured onboarding instead of Home; and `capture_shots.py`
+never set `HK_LANG=en`, so a simulator that had previously been switched to Japanese (e.g. by
+this pass's own UI-test run) leaked into the "English" screenshot set.
+
+**ASO — description never mentioned the two real Pro features.** Pulled the live listing: the
+copy was well-written (hand-authored Japanese, not machine-translated, consistent with house
+style) but the *description* body never mentioned local two-player or card back customization
+anywhere — only `whatsNew` did. Extended both locales' descriptions with a new "bring a friend"
+section, added both features to the "play your way" bullets, and wrote new `promotionalText`
+leading with them (was empty in both locales before this pass). Refreshed keywords: dropped
+"solitaire" (en) / "一人プレイ" (ja) — both inaccurate now that real 2-player exists — for
+"two player"/"pass n play" (en) and "2人対戦"/"パス&プレイ" (ja). Wrote fresh `whatsNew` for
+both locales describing the scoring fix, the two delivered Pro features, full bilingual
+localization, and the new Yaku Guide.
+
+**Push-script bugs found and fixed** (`~/asc-tools/asc_push_hanafudakoikoi.py` +
+`asc_push_hanafudakoikoi_screenshots.py` + `asc_push_hanafudakoikoi_review.py`):
+- `find_app_info` (in both the metadata and review-info push scripts) keyed off
+  `ai["attributes"]["state"]` instead of `appStoreState`. Confirmed live via the API that these
+  are two different fields on the same appInfo resource — the live (READY_FOR_SALE) appInfo's
+  `state` was `"READY_FOR_DISTRIBUTION"`, which was *in* the old "editable" tuple, so the old
+  code would have silently patched the **live listing** instead of the actual REJECTED/editable
+  one. Fixed to use `appStoreState` in both scripts (matches the Janggi bug from this session).
+- `find_or_create_version` hardcoded `versionString: "1.0.0"` (now the live version) and forced
+  `releaseType: "MANUAL"`. Fixed to target a `TARGET_VERSION` constant kept in sync with
+  `project.yml` (now `1.1.1`) and the house-standard `releaseType: AFTER_APPROVAL`.
+- `set_iap_localization` had no error handling — the Pro IAP is currently `IN_REVIEW` (locked),
+  so pushing its localization 409s (`NAME`/`DESCRIPTION` unmodifiable in that state). Wrapped in
+  try/except so this doesn't crash the whole push; confirmed the rest of the run (app-info +
+  version metadata) completed successfully despite the IAP calls failing as expected.
+- `asc_push_hanafudakoikoi_screenshots.py`'s `REPO` and both `asc_upload_hanafudakoikoi_*.py`
+  scripts' `FILE_PATH` were hardcoded to `/Users/user/HanafudaKoiKoi` (nonexistent on this
+  machine); fixed to resolve relative to `Path.home()`. The screenshot script's `ORDER` list
+  also still referenced the old 4-file set (`03-yaku.png`/`04-matchover.png`) — updated to the
+  new 6-file set.
+
+**Pushed to App Store Connect, confirmed landed on the correct editable version.** Re-read the
+listing after every push: `v1.0.1` was correctly found as the editable/REJECTED version, bumped
+to **v1.1.1** (`releaseType=AFTER_APPROVAL`), en-US + ja metadata (name/subtitle/keywords/
+description/promo/whatsNew) all landed there — `v1.0.0` (READY_FOR_SALE, live) was untouched.
+All 12 screenshots (6 EN + 6 JA) uploaded and reordered correctly. IAP localization push
+correctly no-op'd (locked, `IN_REVIEW`) — copy there was already accurate, nothing lost.
+
+**Version bump:** `MARKETING_VERSION` 1.1.0 → **1.1.1**, `CURRENT_PROJECT_VERSION` 5 → **6**
+(`project.yml`, both the `settings.base` and `targets.HanafudaKoiKoi.settings.base` blocks).
+
+**Build:** `xcodegen generate` + Debug **and** Release builds for iOS Simulator, both clean, 0
+warnings (besides the routine AppIntents notice) — verified after every code change this pass,
+including after removing the temporary UI-test target.
+
+**No ASC submit/review-submission action taken** — metadata + screenshot pushes only, per the
+standing 2026-08-18+ staggered-resubmission plan. This app resubmits 2026-09-06 (batch 7, with
+Ô Ăn Quan and Mythsmith).
+
 ## Instructions for Claude Code
 At the end of every session, update the Current State section to reflect progress made.
 

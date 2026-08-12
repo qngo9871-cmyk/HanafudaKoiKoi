@@ -8,6 +8,7 @@
 "home.howToPlay" = "How to Play";
 "home.yakuGuide" = "Yaku Guide";
 "home.upgradeTeaser" = "Unlock Pro — Hard AI, Local 2-Player & Card Backs";
+"home.cardBackSettings" = "Card Back Style";
 
 /* Onboarding */
 "onboarding.page1.title" = "Match to Capture";

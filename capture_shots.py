@@ -7,7 +7,7 @@ import os, re, subprocess, time
 from pathlib import Path
 from PIL import Image, ImageDraw, ImageFont, ImageFilter
 
-APP_DIR = Path("/Users/user/HanafudaKoiKoi")
+APP_DIR = Path(__file__).resolve().parent
 PROJECT = APP_DIR / "HanafudaKoiKoi.xcodeproj"
 SCHEME = "HanafudaKoiKoi"
 BUNDLE = "com.quyenngo.hanafudakoikoi"
@@ -18,22 +18,42 @@ BAND = 470
 SHOTS = [
     ("01-home",      "home",      "Hanafuda, Koi-Koi\n& Go-Stop in one app"),
     ("02-table",     "table",     "The real 48-card deck —\nmonths, brights & ribbons"),
-    ("03-yaku",      "yaku",      "Score real yaku combos —\nThree Brights, Boar-Deer-Butterfly"),
-    ("04-matchover", "matchover", "Play vs AI —\nEasy, Normal or Hard"),
+    ("03-twoplayer", "twoplayer", "Pass & play —\nlocal two-player, one device"),
+    ("04-cardbacks", "upgrade",   "Choose your card back —\nInk Leaf or Sakura"),
+    ("05-yaku",      "yaku",      "Score real yaku combos —\nThree Brights, Boar-Deer-Butterfly"),
+    ("06-matchover", "matchover", "Play vs AI —\nEasy, Normal or Hard"),
 ]
 
 
 def sh(*a, **k): return subprocess.run(a, check=True, capture_output=True, text=True, **k)
 
 
+CAPTURE_DEVICE_NAME = "HanafudaKoiKoi-Capture"
+
+
 def find_device():
+    # Dedicated, app-named simulator — NOT a shared "any Pro Max" match. This batch runs
+    # several sibling apps' capture scripts concurrently on the same Mac; matching any
+    # available Pro Max device risks grabbing a simulator another app's script is using
+    # mid-capture (confirmed cross-app UI contamination in this session for other apps).
     out = subprocess.run(["xcrun", "simctl", "list", "devices", "available"],
                          capture_output=True, text=True).stdout
     for line in out.splitlines():
-        m = re.search(r"^\s*(iPhone .*Pro Max)\s+\(([0-9A-F\-]{36})\)", line)
+        m = re.search(rf"^\s*{re.escape(CAPTURE_DEVICE_NAME)}\s+\(([0-9A-F\-]{{36}})\)", line)
         if m:
-            return m.group(2), m.group(1)
-    raise SystemExit("No available 'iPhone ... Pro Max' simulator found")
+            return m.group(1), CAPTURE_DEVICE_NAME
+    # Not created yet — create it against whatever Pro Max device type + latest iOS
+    # runtime this Mac has, then reuse it on every future run.
+    types = subprocess.run(["xcrun", "simctl", "list", "devicetypes"], capture_output=True, text=True).stdout
+    type_m = re.search(r"iPhone \S+ Pro Max \((com\.apple\.CoreSimulator\.SimDeviceType\.[^\)]+)\)", types)
+    if not type_m:
+        type_m = re.search(r"iPhone \S+ Pro \((com\.apple\.CoreSimulator\.SimDeviceType\.[^\)]+)\)", types)
+    runtimes = subprocess.run(["xcrun", "simctl", "list", "runtimes"], capture_output=True, text=True).stdout
+    runtime_m = re.search(r"(com\.apple\.CoreSimulator\.SimRuntime\.iOS-[0-9\-]+)", runtimes)
+    if not (type_m and runtime_m):
+        raise SystemExit("Could not find a Pro/Pro Max device type + iOS runtime to create the capture simulator")
+    udid = sh("xcrun", "simctl", "create", CAPTURE_DEVICE_NAME, type_m.group(1), runtime_m.group(1)).stdout.strip()
+    return udid, CAPTURE_DEVICE_NAME
 
 
 def build_app():
@@ -110,7 +130,9 @@ def main():
     for shotname, cap, headline in SHOTS:
         subprocess.run(["xcrun", "simctl", "terminate", DEVICE, BUNDLE], capture_output=True)
         subprocess.run(["xcrun", "simctl", "launch", DEVICE, BUNDLE],
-                       env=dict(os.environ, SIMCTL_CHILD_HK_CAPTURE=cap), capture_output=True)
+                       env=dict(os.environ, SIMCTL_CHILD_HK_CAPTURE=cap, SIMCTL_CHILD_HK_SKIP_ONBOARDING="1",
+                                SIMCTL_CHILD_HK_LANG="en"),
+                       capture_output=True)
         time.sleep(2)
         sh("xcrun", "simctl", "io", DEVICE, "screenshot", str(raw))
         compose(raw, headline, OUT / f"{shotname}.png")

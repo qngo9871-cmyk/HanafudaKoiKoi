@@ -8,6 +8,7 @@
 "home.howToPlay" = "遊び方";
 "home.yakuGuide" = "役一覧";
 "home.upgradeTeaser" = "Pro版で解放 — むずかしいAI・2人対戦・裏面デザイン";
+"home.cardBackSettings" = "カード裏面デザイン";
 
 /* Onboarding */
 "onboarding.page1.title" = "月が合えば札を取る";

@@ -13,8 +13,18 @@ enum AppLanguage: String, CaseIterable, Identifiable {
 final class LocalizationManager: ObservableObject {
     static let shared = LocalizationManager()
 
+    // NOTE: didSet must swap `bundle` too, not just persist the raw value — this is the
+    // only observer that runs when the Home segmented Picker's `$language` binding sets
+    // this property directly (which bypasses `setLanguage(_:)` below). Before this fix,
+    // the picker toggled and persisted correctly but `string(_:)` kept resolving against
+    // the stale bundle, so the UI never actually re-rendered in the new language until
+    // the app was relaunched — found via a live mid-session XCUITest switch during the
+    // 2026-08-12 polish pass (cold-launch-only HK_LANG verification never caught this).
     @Published var language: AppLanguage {
-        didSet { UserDefaults.standard.set(language.rawValue, forKey: "app_language") }
+        didSet {
+            UserDefaults.standard.set(language.rawValue, forKey: "app_language")
+            bundle = Self.bundle(for: language)
+        }
     }
 
     private var bundle: Bundle = .main

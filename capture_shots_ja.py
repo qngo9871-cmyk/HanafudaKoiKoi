@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
-"""Japanese-caption App Store screenshots for the ja locale — same real in-app UI
-captures as capture_shots.py (English UI, since in-app strings aren't localized yet),
-with a native-Japanese caption band instead of a translated-in-place one.
+"""Japanese-locale App Store screenshots. Real in-app UI captures with HK_LANG=ja
+forcing the actual Japanese localization bundle (added 2026-08-09 — this used to run
+the English UI with only a translated caption band, which was stale/misleading once
+the app became genuinely bilingual), composited with a native-Japanese caption band.
 Output: screenshots/final_ja/*.png"""
 import sys
 from pathlib import Path
@@ -22,8 +23,10 @@ OUT.mkdir(parents=True, exist_ok=True)
 SHOTS = [
     ("01-home",      "home",      "花札・こいこい\nごーすとっぷが一つに"),
     ("02-table",     "table",     "本格48枚の花札 —\n月・光・短冊で勝負"),
-    ("03-yaku",      "yaku",      "本物の役を獲得 —\n三光、猪鹿蝶"),
-    ("04-matchover", "matchover", "AI対戦 —\nかんたん・ふつう・むずかしい"),
+    ("03-twoplayer", "twoplayer", "友達と2人対戦 —\n1台の端末でパス&プレイ"),
+    ("04-cardbacks", "upgrade",   "カード裏面を選べる —\n墨葉 or 桜"),
+    ("05-yaku",      "yaku",      "本物の役を獲得 —\n三光、猪鹿蝶"),
+    ("06-matchover", "matchover", "AI対戦 —\nかんたん・ふつう・むずかしい"),
 ]
 
 
@@ -46,7 +49,9 @@ def main():
     for shotname, cap, headline in SHOTS:
         subprocess.run(["xcrun", "simctl", "terminate", DEVICE, BUNDLE], capture_output=True)
         subprocess.run(["xcrun", "simctl", "launch", DEVICE, BUNDLE],
-                       env={"SIMCTL_CHILD_HK_CAPTURE": cap} | dict(__import__("os").environ),
+                       env={"SIMCTL_CHILD_HK_CAPTURE": cap, "SIMCTL_CHILD_HK_LANG": "ja",
+                            "SIMCTL_CHILD_HK_SKIP_ONBOARDING": "1"}
+                            | dict(__import__("os").environ),
                        capture_output=True)
         time.sleep(2)
         sh("xcrun", "simctl", "io", DEVICE, "screenshot", str(raw))
