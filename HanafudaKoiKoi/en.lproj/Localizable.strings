@@ -8,7 +8,9 @@
 "home.howToPlay" = "How to Play";
 "home.yakuGuide" = "Yaku Guide";
 "home.upgradeTeaser" = "Unlock Pro — Hard AI, Local 2-Player & Card Backs";
+"home.upgradeTeaser.trialended" = "Trial ended — unlock Pro to keep playing →";
 "home.cardBackSettings" = "Card Back Style";
+"home.trialdays" = "Free trial — %d day(s) left";
 
 /* Onboarding */
 "onboarding.page1.title" = "Match to Capture";
@@ -61,6 +63,8 @@
 
 /* Upgrade / Pro */
 "upgrade.title" = "Koi-Koi Pro";
+"upgrade.subtitle" = "Free for 7 days, then unlock Pro to keep playing every mode.";
+"upgrade.subtitle.trialended" = "Your 7-day free trial has ended. Unlock Koi-Koi Pro to keep playing.";
 "upgrade.featureHardAI" = "Hard AI opponent";
 "upgrade.featureTwoPlayer" = "Local two-player mode";
 "upgrade.featureCardBacks" = "Alternate card back designs";

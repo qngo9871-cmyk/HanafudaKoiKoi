@@ -8,7 +8,9 @@
 "home.howToPlay" = "遊び方";
 "home.yakuGuide" = "役一覧";
 "home.upgradeTeaser" = "Pro版で解放 — むずかしいAI・2人対戦・裏面デザイン";
+"home.upgradeTeaser.trialended" = "無料期間が終了しました — Pro版で解放してプレイを続ける →";
 "home.cardBackSettings" = "カード裏面デザイン";
+"home.trialdays" = "無料お試し期間 — 残り%d日";
 
 /* Onboarding */
 "onboarding.page1.title" = "月が合えば札を取る";
@@ -61,6 +63,8 @@
 
 /* Upgrade / Pro */
 "upgrade.title" = "こいこい Pro";
+"upgrade.subtitle" = "最初の7日間は無料。その後はPro版で解放して全モードをプレイ。";
+"upgrade.subtitle.trialended" = "7日間の無料お試し期間が終了しました。こいこい Proを解放してプレイを続けましょう。";
 "upgrade.featureHardAI" = "むずかしいAI対戦";
 "upgrade.featureTwoPlayer" = "ローカル2人対戦モード";
 "upgrade.featureCardBacks" = "札の裏面デザイン変更";

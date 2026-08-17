@@ -24,6 +24,12 @@ struct UpgradeView: View {
                         .font(.system(size: 26, weight: .heavy, design: .rounded))
                         .foregroundStyle(.white)
 
+                    Text(L(purchases.isPro || purchases.trialActive ? "upgrade.subtitle" : "upgrade.subtitle.trialended"))
+                        .font(.system(size: 13, weight: .medium))
+                        .foregroundStyle(.white.opacity(0.65))
+                        .multilineTextAlignment(.center)
+                        .padding(.horizontal, 30)
+
                     VStack(alignment: .leading, spacing: 10) {
                         featureRow("brain.head.profile", L("upgrade.featureHardAI"))
                         featureRow("person.2.fill", L("upgrade.featureTwoPlayer"))

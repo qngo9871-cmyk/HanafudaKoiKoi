@@ -398,6 +398,63 @@ including after removing the temporary UI-test target.
 standing 2026-08-18+ staggered-resubmission plan. This app resubmits 2026-09-06 (batch 7, with
 Ô Ăn Quan and Mythsmith).
 
+## 7-day trial, then everything locks (2026-08-18)
+
+Portfolio-wide standing rule now applies here: no app should offer free play at any
+mode/difficulty forever, only a capped trial (same fix already applied to ChineseChess
+and SamLoc after both shipped real downloads with **zero** IAP purchases — a permanently-
+free tier was good enough that nobody ever needed to pay). This session's job was code-
+prep-and-commit only, per the standing 2026-08-18+ staggered-resubmission plan — **nothing
+submitted to App Store Connect**.
+
+**What was gated before:** Easy AI and Normal AI were fully, permanently free (no trial,
+no expiry) — the complete single-player game with full rules, full yaku scoring, and no
+ads. Only Hard AI, Local Two-Player (pass-and-play), and alternate card backs were ever
+behind the `hanafudakoikoi.pro` IAP. That free Easy/Normal tier was a real risk of the
+same zero-purchase pattern seen on ChineseChess/SamLoc.
+
+**What's gated now:** `PurchaseManager.swift` gained `trialActive`/`trialDaysRemaining`
+backed by a `firstLaunchDate` UserDefaults key (7-day `trialDuration`, `evaluateTrialStatus()`
+called from `init()` alongside the existing transaction listener). `HomeView.isLocked(_:)`
+now gates **all three difficulties** — Easy/Normal lock once the trial expires and the
+user isn't Pro; Hard stays permanently gated exactly as before (it was never part of the
+free tier, so the trial doesn't change its status — it's Pro-only from day one, same as
+Local Two-Player and card backs, which were untouched since they were never free). Existing
+installs with no stored `firstLaunchDate` get the clock started by this update rather than
+being locked out immediately. Home now shows a "Free trial — N day(s) left" caption while
+the trial is active, and the upgrade-teaser footnote switches to "Trial ended — unlock Pro
+to keep playing →" once it expires. `UpgradeView` gained a new subtitle line (didn't exist
+before this pass) that switches the same way between trial-active and trial-ended copy.
+
+**Also fixed a latent bug found while in `PurchaseManager.swift`:** `updateEntitlementStatus()`'s
+`#if DEBUG isPro = true` was a bare override with no capture-mode exemption — unlike the
+already-correct pattern this app's own `ContentView.swift` uses for `HK_CAPTURE`/`HK_LANG`/
+`HK_SKIP_ONBOARDING`. Fixed to double-gate the same way (matching the SamLoc/ChineseChess
+reference pattern): `HK_CAPTURE=upgrade` now correctly forces `isPro=false` so that capture
+mode's App Store screenshot shows the real locked/buy-button state instead of "already
+purchased," and the plain `HK_SKIP_ONBOARDING` home capture stays Pro so its screenshot
+still shows all destinations unlocked. (Note: the 2026-08-09 pass's CLAUDE.md claim of "no
+DEBUG/isPro double-gating bug found here" was about a *different* bug class — two competing
+isPro checks fighting each other — not this missing capture-mode exemption, which didn't
+exist as a concept until this trial-clock work needed it.)
+
+**New localization keys** (`home.upgradeTeaser.trialended`, `home.trialdays`,
+`upgrade.subtitle`, `upgrade.subtitle.trialended`) added to both `en.lproj` and `ja.lproj`
+`Localizable.strings`, hand-written Japanese (not machine-translated, matching this app's
+existing house style) — key-set parity between the two locales re-verified via `diff` after
+the addition. `upgrade.subtitle`/`.trialended` are net-new concepts for this app (SamLoc/
+ChineseChess already had an `upgrade.subtitle`-equivalent; this app's `UpgradeView` had none
+until this pass).
+
+**Build verified:** `xcodebuild -scheme HanafudaKoiKoi -destination 'generic/platform=iOS'
+-configuration Debug build` — clean `** BUILD SUCCEEDED **`, no `xcodegen generate` run (no
+`project.yml` changes this pass), no version bump.
+
+**NOT YET SUBMITTED to the App Store.** This is a real product change for existing/future
+users of a live, previously-rejected version awaiting the 2026-09-06 (batch 7) resubmission
+slot — held for the user's explicit go-ahead before any archive/export/upload/submit action,
+same as every other pending item in this file.
+
 ## Build staged for resubmission (2026-08-13)
 
 Archived, exported, and uploaded a Release build ahead of the staggered resubmission — still

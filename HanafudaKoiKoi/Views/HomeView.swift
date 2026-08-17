@@ -50,7 +50,7 @@ struct HomeView: View {
                         VStack(spacing: 14) {
                             ForEach(AIDifficulty.allCases, id: \.self) { level in
                                 Button {
-                                    if level == .hard && !purchases.isPro {
+                                    if isLocked(level) {
                                         showUpgrade = true
                                     } else {
                                         pendingDifficulty = level
@@ -62,7 +62,7 @@ struct HomeView: View {
                                         Text(label(for: level))
                                             .font(.system(size: 17, weight: .semibold, design: .rounded))
                                         Spacer()
-                                        if level == .hard && !purchases.isPro {
+                                        if isLocked(level) {
                                             Image(systemName: "lock.fill").font(.system(size: 14))
                                         } else {
                                             Image(systemName: "chevron.right").font(.system(size: 14))
@@ -118,11 +118,17 @@ struct HomeView: View {
                         // of opening this sheet. Without this, a paying customer would have
                         // no way to revisit their card-back choice after the first purchase.
                         Button { showUpgrade = true } label: {
-                            Text(purchases.isPro ? L("home.cardBackSettings") : L("home.upgradeTeaser"))
+                            Text(purchases.isPro ? L("home.cardBackSettings") : L(purchases.trialActive ? "home.upgradeTeaser" : "home.upgradeTeaser.trialended"))
                                 .font(.system(size: 13, weight: .semibold))
                                 .foregroundStyle(.yellow)
                                 .multilineTextAlignment(.center)
                                 .padding(.horizontal, 30)
+                        }
+
+                        if !purchases.isPro && purchases.trialActive {
+                            Text(String(format: L("home.trialdays"), purchases.trialDaysRemaining))
+                                .font(.system(size: 12, weight: .medium))
+                                .foregroundStyle(.white.opacity(0.5))
                         }
 
                         Picker("", selection: $loc.language) {
@@ -163,6 +169,15 @@ struct HomeView: View {
             .frame(width: 90, height: 126)
             .opacity(0.16)
             .rotationEffect(.degrees(rotation))
+    }
+
+    /// Easy/Normal used to be permanently free; Hard was always Pro-only. Now
+    /// every difficulty locks once the 7-day trial ends and the player hasn't
+    /// bought Pro — no tier stays free forever.
+    private func isLocked(_ difficulty: AIDifficulty) -> Bool {
+        if purchases.isPro { return false }
+        if difficulty == .hard { return true }
+        return !purchases.trialActive
     }
 
     private func label(for level: AIDifficulty) -> String {
