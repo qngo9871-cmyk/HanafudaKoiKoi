@@ -455,6 +455,25 @@ users of a live, previously-rejected version awaiting the 2026-09-06 (batch 7) r
 slot — held for the user's explicit go-ahead before any archive/export/upload/submit action,
 same as every other pending item in this file.
 
+## Build staged for resubmission, trial-paywall version (2026-08-18)
+
+Archived, exported, and uploaded a Release build carrying the 7-day-trial-then-full-lock
+change described above. Build **1.1.2 (7)** uploaded via `xcrun altool --upload-app`
+(Delivery UUID `3dcc1df1-ef39-46bf-bea3-7c52e7cd51cd`), processed to `VALID` by Apple.
+Bumped both `settings.base` and `targets.HanafudaKoiKoi.settings.base` in `project.yml`
+together (given this app's prior history of those two blocks drifting out of sync — see
+the "Version-mismatch bug" note in the 2026-08-13 entry below) and independently verified
+via `PlistBuddy` against the actual `.xcarchive`'s `Info.plist` before exporting:
+`CFBundleShortVersionString` = `1.1.2`, `CFBundleVersion` = `7`, confirming no repeat of
+that bug. New version number (1.1.2) is higher than both the local pre-bump value (1.1.1)
+and the highest version already known to ASC (1.1.1, `PREPARE_FOR_SUBMISSION`); new build
+number (7) is higher than the highest build ASC had seen (6).
+
+**NOT YET submitted for review, and the new build is not attached to any appStoreVersion**
+— deliberately held per the staggered resubmission plan (this app's slot is still
+2026-09-06, batch 7) and the explicit instruction to wait for the user's go-ahead app by
+app.
+
 ## Build staged for resubmission (2026-08-13)
 
 Archived, exported, and uploaded a Release build ahead of the staggered resubmission — still
