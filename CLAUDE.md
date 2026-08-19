@@ -469,10 +469,16 @@ that bug. New version number (1.1.2) is higher than both the local pre-bump valu
 and the highest version already known to ASC (1.1.1, `PREPARE_FOR_SUBMISSION`); new build
 number (7) is higher than the highest build ASC had seen (6).
 
-**NOT YET submitted for review, and the new build is not attached to any appStoreVersion**
-— deliberately held per the staggered resubmission plan (this app's slot is still
-2026-09-06, batch 7) and the explicit instruction to wait for the user's go-ahead app by
-app.
+**SUBMITTED 2026-08-20, WAITING_FOR_REVIEW** — superseding the 2026-09-06 staggered slot
+below; the user gave explicit go-ahead to ship the apps already live with the free-forever
+bug, this one included. The stuck `1.1.1` submission (`76783f43-...`, `REJECTED` version
+item + an IAP item, state `UNRESOLVED_ISSUES`) was canceled via the API to free the
+version; build 7 attached (already at 1.1.2, no further bump needed), `whatsNew` set for
+both en-US/ja. Canceling reset the IAP to `READY_TO_SUBMIT`, so the user manually
+re-ticked it into the version via the ASC web UI, which created its own new draft
+reviewSubmission (`6436d09a-...`) — attached the version to that same draft rather than
+creating a competing one, then submitted. Verified post-submit that both the version and
+the IAP moved to `WAITING_FOR_REVIEW` together.
 
 ## Build staged for resubmission (2026-08-13)
 
